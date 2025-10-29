@@ -4,10 +4,18 @@ import StatsCard from '../shared/StatsCard';
 import BorrowerForm, { type LoanFormData } from './BorrowerForm';
 import LoanRequestCard, { type LoanRequest } from './LoanRequestCard';
 import BorrowerProfile from './BorrowerProfile';
+import ChatWidget from './ChatWidget';
+import CredibilityDashboard from './CredibilityDashboard';
+import VoiceChat from './VoiceChat';
+import PaymentTracker from './PaymentTracker';
+import NotificationSystem from './NotificationSystem';
 
 const BorrowerView = () => {
   const [showForm, setShowForm] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showCredibilityDashboard, setShowCredibilityDashboard] = useState(false);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
+  const [showPaymentTracker, setShowPaymentTracker] = useState(false);
   const [requests, setRequests] = useState<LoanRequest[]>([
     { 
       id: 1, 
@@ -151,19 +159,42 @@ const BorrowerView = () => {
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 font-clash">Your Loan Dashboard</h2>
             <p className="text-slate-400 text-base sm:text-lg font-inter">Manage your applications and track progress</p>
           </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowProfile(true)}
-              className="px-5 py-2.5 sm:py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 text-sm sm:text-base font-inter"
-            >
-              View Profile
-            </button>
-            <button
-              onClick={() => setShowForm(true)}
-              className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2 text-sm sm:text-base whitespace-nowrap font-inter"
-            >
-              New Application <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
+          
+          {/* Action Buttons with Notifications */}
+          <div className="flex items-center gap-3">
+            <NotificationSystem />
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setShowProfile(true)}
+                className="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 text-sm font-inter"
+              >
+                Profile
+              </button>
+              <button
+                onClick={() => setShowCredibilityDashboard(true)}
+                className="px-4 py-2.5 rounded-lg bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/30 transition-all duration-300 text-sm font-inter"
+              >
+                Credibility
+              </button>
+              <button
+                onClick={() => setShowPaymentTracker(true)}
+                className="px-4 py-2.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition-all duration-300 text-sm font-inter"
+              >
+                Payments
+              </button>
+              <button
+                onClick={() => setShowVoiceChat(true)}
+                className="px-4 py-2.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition-all duration-300 text-sm font-inter"
+              >
+                Voice Chat
+              </button>
+              <button
+                onClick={() => setShowForm(true)}
+                className="px-5 py-2.5 rounded-lg bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2 text-sm whitespace-nowrap font-inter"
+              >
+                New Application <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
         
@@ -218,6 +249,88 @@ const BorrowerView = () => {
           </div>
         </div>
       )}
+
+      {showCredibilityDashboard && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-6xl w-full my-8">
+            <div className="bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-white/10">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-white font-clash">Credibility System</h2>
+                <button
+                  onClick={() => setShowCredibilityDashboard(false)}
+                  className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
+                >
+                  Close
+                </button>
+              </div>
+              <CredibilityDashboard 
+                currentScore={780}
+                paymentStreak={5}
+                totalLoans={2}
+                communityRating={4.7}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPaymentTracker && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="max-w-4xl w-full my-8">
+            <div className="bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 border border-white/10">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-white font-clash">Payment Management</h2>
+                <button
+                  onClick={() => setShowPaymentTracker(false)}
+                  className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
+                >
+                  Close
+                </button>
+              </div>
+              <PaymentTracker 
+                loanId="loan_12345"
+                totalAmount={5000}
+                monthlyPayment={456}
+                dueDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
+                paymentHistory={[
+                  {
+                    date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                    amount: 456,
+                    status: 'paid' as const,
+                    daysPaid: -2
+                  },
+                  {
+                    date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+                    amount: 456,
+                    status: 'paid' as const,
+                    daysPaid: 0
+                  },
+                  {
+                    date: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
+                    amount: 456,
+                    status: 'paid' as const,
+                    daysPaid: -1
+                  }
+                ]}
+                onPayNow={() => {
+                  // Handle payment logic here
+                  console.log('Payment initiated');
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <VoiceChat 
+        isOpen={showVoiceChat}
+        onClose={() => setShowVoiceChat(false)}
+      />
+
+      <ChatWidget 
+        onVoiceCall={() => setShowVoiceChat(true)}
+        onVideoCall={() => setShowVoiceChat(true)}
+      />
     </div>
   );
 };
