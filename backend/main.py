@@ -1,7 +1,7 @@
 # backend/main.py
 from fastapi import FastAPI
-from backend.models import LoanRequest
-from backend.ai_model import approve_loan
+from models import LoanRequest
+from ai_model import approve_loan
 import sqlite3
 
 app = FastAPI(title="FundTogether Loan System")
