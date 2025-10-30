@@ -149,81 +149,57 @@ const DonorView = () => {
   return (
     <div className="relative z-10 flex-1">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        {/* Hero Section with AI Explanation */}
-        <div className="mb-8 sm:mb-12" style={{animation: 'slideUp 0.8s ease-out'}}>
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-2 h-12 bg-neo-gradient rounded-full"></div>
-            <div>
-              <h2 className="text-4xl sm:text-5xl font-bold text-neo-mint mb-2 font-bricolage">
-                Donate & Create Impact
-              </h2>
-              <p className="text-silver-edge text-lg sm:text-xl font-manrope">
-                Your donations. AI-powered distribution. Real impact.
-              </p>
-            </div>
-          </div>
+        {/* Header */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-white mb-2">
+            Make a Donation
+          </h2>
+          <p className="text-gray-400 mb-6">
+            Support communities worldwide with AI-powered matching
+          </p>
 
-          {/* AI System Explanation */}
-          <div className="glass-morphism rounded-3xl p-6 sm:p-8 border border-neo-mint/30 neo-shadow mb-6">
-            <div className="flex items-start gap-6">
-              <div className="p-4 bg-neo-gradient rounded-2xl shrink-0">
-                <Bot className="w-8 h-8 text-carbon-black" />
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10 mb-6">
+            <div className="flex items-center gap-3 mb-3">
+              <Bot className="w-6 h-6 text-blue-400" />
+              <h3 className="text-lg font-semibold text-white">
+                How It Works
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <p className="text-white font-medium mb-1">1. Choose a cause</p>
+                <p className="text-gray-400">Pick what matters to you</p>
               </div>
-              <div className="flex-1">
-                <h3 className="text-xl font-bold text-neo-mint mb-3 font-bricolage">
-                  How Your Donations Work
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-manrope">
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-wealth-gold rounded-full mt-2 shrink-0"></div>
-                    <div>
-                      <p className="text-ghost-white font-semibold mb-1">1. Choose Your Cause</p>
-                      <p className="text-silver-edge">Select causes you care about: education, healthcare, small business, women's empowerment</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-trust-blue rounded-full mt-2 shrink-0"></div>
-                    <div>
-                      <p className="text-ghost-white font-semibold mb-1">2. AI Finds Best Projects</p>
-                      <p className="text-silver-edge">Our AI automatically identifies the most impactful projects and distributes your donation</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 bg-growth-green rounded-full mt-2 shrink-0"></div>
-                    <div>
-                      <p className="text-ghost-white font-semibold mb-1">3. See Your Impact</p>
-                      <p className="text-silver-edge">Track the specific people and projects your donations helped, with real progress updates</p>
-                    </div>
-                  </div>
-                </div>
+              <div>
+                <p className="text-white font-medium mb-1">2. AI matches projects</p>
+                <p className="text-gray-400">We find the best opportunities</p>
+              </div>
+              <div>
+                <p className="text-white font-medium mb-1">3. Track your impact</p>
+                <p className="text-gray-400">See real results from your donation</p>
               </div>
             </div>
           </div>
-          
-          <div className="w-full h-px bg-linear-to-r from-transparent via-neo-mint/30 to-transparent"></div>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="mb-8" style={{animation: 'slideUp 0.8s ease-out', animationDelay: '200ms', animationFillMode: 'both'}}>
-          <div className="flex gap-2 bg-ash-gray/30 p-2 rounded-2xl border border-silver-edge/20">
+        <div className="mb-6">
+          <div className="flex gap-2 bg-white/5 p-1 rounded-lg">
             {[
-              { id: 'donate' as TabType, label: 'Make Donation', icon: Target, description: 'Choose causes to support' },
-              { id: 'impact' as TabType, label: 'Your Impact', icon: Activity, description: 'See who you\'ve helped' }
+              { id: 'donate' as TabType, label: 'Donate', icon: Target },
+              { id: 'impact' as TabType, label: 'My Impact', icon: Activity }
             ].map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center gap-3 px-6 py-4 rounded-xl transition-all duration-500 ${
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded transition-all ${
                   activeTab === tab.id
-                    ? 'bg-neo-gradient text-carbon-black shadow-lg neo-shadow'
-                    : 'text-silver-edge hover:text-neo-mint hover:bg-silver-edge/10'
+                    ? 'bg-blue-500 text-white'
+                    : 'text-gray-400 hover:text-white'
                 }`}
               >
-                <tab.icon className="w-5 h-5" />
-                <div className="text-left">
-                  <div className="font-semibold font-bricolage">{tab.label}</div>
-                  <div className="text-xs opacity-70">{tab.description}</div>
-                </div>
+                <tab.icon className="w-4 h-4" />
+                <span className="font-medium">{tab.label}</span>
               </button>
             ))}
           </div>
@@ -240,41 +216,41 @@ const DonorView = () => {
         {/* Tab Content */}
         {activeTab === 'donate' && (
           <div className="space-y-8">
-            <div className="mb-8 sm:mb-12" style={{animation: 'slideUp 0.8s ease-out', animationDelay: '400ms', animationFillMode: 'both'}}>
-              <div className="glass-morphism rounded-3xl p-6 sm:p-8 border border-silver-edge/20 neo-shadow">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div className="mb-6">
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-sm font-mono uppercase tracking-wider text-silver-edge mb-4">
-                      ▲ Focus Area
+                    <label className="block text-sm text-gray-400 mb-2">
+                      Category
                     </label>
                     <div className="grid grid-cols-3 gap-2">
                       {causes.map(cause => (
                         <button
                           key={cause}
                           onClick={() => setSelectedCause(cause)}
-                          className={`px-4 py-3 rounded-2xl font-medium transition-all duration-500 text-sm font-manrope relative overflow-hidden ${
+                          className={`px-3 py-2 rounded text-sm transition-all ${
                             selectedCause === cause
-                              ? 'bg-neo-gradient text-carbon-black shadow-lg neo-shadow font-semibold'
-                              : 'glass-morphism text-silver-edge hover:text-neo-mint border border-silver-edge/30 hover:border-neo-mint/50'
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-white/5 text-gray-400 hover:text-white border border-white/10'
                           }`}
                         >
-                          {cause === 'all' ? 'All Areas' : cause.charAt(0).toUpperCase() + cause.slice(1)}
+                          {cause === 'all' ? 'All' : cause.charAt(0).toUpperCase() + cause.slice(1)}
                         </button>
                       ))}
                     </div>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-mono uppercase tracking-wider text-silver-edge mb-4">
-                      ⟡ Global Markets
+                    <label className="block text-sm text-gray-400 mb-2">
+                      Location
                     </label>
                     <select
                       value={selectedLocation}
                       onChange={(e) => setSelectedLocation(e.target.value)}
-                      className="w-full px-6 py-4 glass-morphism border border-silver-edge/30 rounded-2xl text-ghost-white text-sm focus:outline-none focus:border-neo-mint/50 transition-all duration-500 font-manrope neo-shadow"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded text-white text-sm focus:outline-none focus:border-blue-400"
                     >
                       {locations.map(location => (
-                        <option key={location} value={location} className="bg-ash-gray">
+                        <option key={location} value={location} className="bg-gray-800">
                           {location === 'all' ? 'All Locations' : location}
                         </option>
                       ))}
@@ -282,46 +258,44 @@ const DonorView = () => {
                   </div>
                 </div>
                 
-                <div className="flex justify-between items-center pt-6 border-t border-silver-edge/20">
-                  <p className="text-sm text-silver-edge font-mono">
-                    {filteredCommunities.length} causes available • ${filteredCommunities.reduce((sum, c) => sum + c.raised, 0).toLocaleString()} donated so far
-                  </p>
-                  <div className="flex items-center gap-2 text-growth-green text-sm font-mono">
-                    <div className="w-2 h-2 bg-growth-green rounded-full animate-pulse"></div>
-                    AI Active
+                <div className="flex justify-between items-center pt-4 border-t border-white/10 text-sm text-gray-400">
+                  <span>
+                    {filteredCommunities.length} causes • ${filteredCommunities.reduce((sum, c) => sum + c.raised, 0).toLocaleString()} raised
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <span>AI Active</span>
                   </div>
                 </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
-              {filteredCommunities.map((community, idx) => (
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+              {filteredCommunities.map((community) => (
                 <CommunityCard 
                   key={community.id} 
                   {...community} 
-                  delay={600 + idx * 150}
+                  delay={0}
                   onSupport={handleSupport}
                 />
               ))}
             </div>
             
             {filteredCommunities.length === 0 && (
-              <div className="text-center py-16">
-                <div className="glass-morphism rounded-3xl p-8 border border-silver-edge/20 neo-shadow max-w-md mx-auto">
-                  <div className="w-16 h-16 bg-wealth-gold/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🔍</span>
-                  </div>
-                  <p className="text-silver-edge text-lg font-manrope mb-6">
-                    No causes match your filters.
+              <div className="text-center py-12">
+                <div className="bg-white/5 rounded-lg p-6 border border-white/10 max-w-sm mx-auto">
+                  <div className="text-4xl mb-3">🔍</div>
+                  <p className="text-gray-400 mb-4">
+                    No causes match your filters
                   </p>
                   <button
                     onClick={() => {
                       setSelectedCause('all');
                       setSelectedLocation('all');
                     }}
-                    className="px-8 py-3 rounded-2xl bg-neo-gradient hover:bg-trust-gradient text-carbon-black font-semibold transition-all duration-500 neo-shadow font-bricolage"
+                    className="px-6 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors"
                   >
-                    Show All Causes
+                    Show All
                   </button>
                 </div>
               </div>
@@ -331,66 +305,59 @@ const DonorView = () => {
 
         {/* Impact Tab */}
         {activeTab === 'impact' && (
-          <div className="space-y-6" style={{animation: 'slideUp 0.8s ease-out', animationDelay: '400ms', animationFillMode: 'both'}}>
-            <div className="flex items-center justify-between mb-8">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-2xl font-bold text-neo-mint font-bricolage mb-2">People You've Helped</h3>
-                <p className="text-silver-edge font-manrope">See the real people and projects your donations supported</p>
+                <h3 className="text-xl font-bold text-white mb-1">Your Impact</h3>
+                <p className="text-gray-400">Projects you've supported</p>
               </div>
-              <div className="glass-morphism px-4 py-2 rounded-xl border border-silver-edge/20">
-                <span className="text-growth-green font-mono text-sm font-semibold">12 People Helped</span>
+              <div className="bg-green-500/20 px-3 py-1 rounded border border-green-500/30">
+                <span className="text-green-400 text-sm font-medium">12 People Helped</span>
               </div>
             </div>
 
-            <div className="grid gap-6">
-              {fundedProjects.map((project, idx) => (
+            <div className="space-y-4">
+              {fundedProjects.map((project) => (
                 <div 
                   key={project.id}
-                  className="glass-morphism rounded-3xl p-6 border border-silver-edge/20 neo-shadow hover:border-neo-mint/40 transition-all duration-500"
-                  style={{animation: 'slideUp 0.8s ease-out', animationDelay: `${500 + idx * 100}ms`, animationFillMode: 'both'}}
+                  className="bg-white/5 rounded-lg p-4 border border-white/10 hover:border-white/20 transition-all"
                 >
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h4 className="text-xl font-bold text-neo-mint font-bricolage">{project.name}</h4>
-                        <span className={`px-3 py-1 rounded-full text-xs font-mono font-semibold ${
+                      <div className="flex items-center gap-2 mb-1">
+                        <h4 className="text-lg font-semibold text-white">{project.name}</h4>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
                           project.status === 'active' 
-                            ? 'bg-growth-green/20 text-growth-green border border-growth-green/30' 
-                            : 'bg-trust-blue/20 text-trust-blue border border-trust-blue/30'
+                            ? 'bg-green-500/20 text-green-400' 
+                            : 'bg-blue-500/20 text-blue-400'
                         }`}>
                           {project.status}
                         </span>
                       </div>
-                      <p className="text-silver-edge text-sm font-manrope mb-1">By {project.borrower} • {project.location}</p>
-                      <p className="text-silver-edge text-xs font-mono">From pool: {project.poolSource}</p>
+                      <p className="text-gray-400 text-sm">By {project.borrower} • {project.location}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-ghost-white font-bricolage">${project.amount.toLocaleString()}</div>
-                      <div className="text-silver-edge text-sm font-mono">Helped {project.funded.toLocaleDateString()}</div>
+                      <div className="text-lg font-bold text-white">${project.amount.toLocaleString()}</div>
+                      <div className="text-gray-400 text-xs">{project.funded.toLocaleDateString()}</div>
                     </div>
                   </div>
 
-                  <div className="mb-4">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-mono text-silver-edge">Project Progress</span>
-                      <span className="text-sm font-bold text-neo-mint font-mono">{project.repaymentProgress}% Complete</span>
+                  <div className="mb-3">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-sm text-gray-400">Progress</span>
+                      <span className="text-sm font-medium text-white">{project.repaymentProgress}%</span>
                     </div>
-                    <div className="h-2 bg-ash-gray rounded-full overflow-hidden">
+                    <div className="w-full bg-gray-700 rounded-full h-2">
                       <div 
-                        className="h-full bg-neo-gradient rounded-full transition-all duration-1000"
+                        className="h-full bg-green-500 rounded-full transition-all"
                         style={{width: `${project.repaymentProgress}%`}}
                       ></div>
                     </div>
                   </div>
 
-                  <div className="p-4 bg-growth-green/10 rounded-2xl border border-growth-green/20">
-                    <div className="flex items-start gap-3">
-                      <div className="w-2 h-2 bg-growth-green rounded-full mt-2 shrink-0"></div>
-                      <div>
-                        <p className="text-growth-green font-semibold text-sm mb-1">Real Impact</p>
-                        <p className="text-growth-green/80 text-sm font-manrope">{project.impact}</p>
-                      </div>
-                    </div>
+                  <div className="p-3 bg-green-500/10 rounded border border-green-500/20">
+                    <p className="text-green-400 font-medium text-sm mb-1">Impact</p>
+                    <p className="text-green-300/80 text-sm">{project.impact}</p>
                   </div>
                 </div>
               ))}

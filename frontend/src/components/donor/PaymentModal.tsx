@@ -22,84 +22,74 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-lg w-full border border-white/10 shadow-2xl">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-xl font-bold text-white font-clash flex items-center gap-2">
-            <Heart className="w-5 h-5 text-violet-400" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+      <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-white/10">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <Heart className="w-5 h-5 text-blue-400" />
             Donate to {community.name}
           </h3>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="p-1 hover:bg-gray-700 rounded transition-colors"
           >
             <X className="w-5 h-5 text-white" />
           </button>
         </div>
 
-        {/* Pool Explanation */}
-        <div className="mb-6 p-4 bg-linear-to-r from-violet-500/10 to-purple-500/10 rounded-lg border border-violet-500/20">
-          <h4 className="text-sm font-semibold text-violet-300 mb-2">How Your Donation Helps</h4>
-          <div className="space-y-2 text-xs text-slate-300">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
-              <span>Your donation supports {community.category} projects in {community.location}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
-              <span>AI finds the most impactful projects and people to help</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
-              <span>See exactly who you helped and track their progress</span>
-            </div>
+        <div className="mb-4 p-3 bg-blue-500/10 rounded border border-blue-500/20">
+          <h4 className="text-sm font-medium text-blue-400 mb-2">How it works</h4>
+          <div className="space-y-1 text-xs text-gray-300">
+            <p>• Supports {community.category} projects in {community.location}</p>
+            <p>• AI matches your donation to high-impact projects</p>
+            <p>• Track progress of people you help</p>
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="space-y-4 font-inter">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
-              Donation Amount (USD)
+            <label className="block text-sm text-gray-400 mb-2">
+              Amount (USD)
             </label>
             <div className="relative">
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full px-4 py-3 pl-8 bg-slate-700/50 border border-white/10 rounded-lg text-white focus:outline-none focus:border-violet-400 transition-colors"
+                className="w-full px-3 py-2 pl-8 bg-white/5 border border-white/10 rounded text-white focus:outline-none focus:border-blue-400 transition-colors"
                 placeholder="100"
                 min="1"
                 required
               />
-              <Banknote className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              <Banknote className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
             </div>
           </div>
           
-          <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
+          <div className="flex items-center gap-2 p-3 bg-white/5 rounded">
             <input
               type="checkbox"
               id="recurring"
               checked={recurring}
               onChange={(e) => setRecurring(e.target.checked)}
-              className="w-4 h-4 text-violet-500 bg-slate-600 border-slate-500 rounded focus:ring-violet-500"
+              className="w-4 h-4"
             />
             <label htmlFor="recurring" className="text-sm text-white">
-              Make this a monthly recurring donation
+              Monthly recurring donation
             </label>
           </div>
           
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-2">
+            <label className="block text-sm text-gray-400 mb-2">
               Payment Method
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setPaymentMethod('card')}
-                className={`p-3 rounded-lg border transition-all duration-300 flex items-center justify-center gap-2 ${
+                className={`p-2 rounded border transition-all flex items-center justify-center gap-2 ${
                   paymentMethod === 'card' 
-                    ? 'border-violet-400 bg-violet-500/20 text-violet-400' 
-                    : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+                    ? 'border-blue-400 bg-blue-500/20 text-blue-400' 
+                    : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
                 }`}
               >
                 <CreditCard className="w-4 h-4" />
@@ -108,10 +98,10 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
               <button
                 type="button"
                 onClick={() => setPaymentMethod('crypto')}
-                className={`p-3 rounded-lg border transition-all duration-300 flex items-center justify-center gap-2 ${
+                className={`p-2 rounded border transition-all flex items-center justify-center gap-2 ${
                   paymentMethod === 'crypto' 
-                    ? 'border-violet-400 bg-violet-500/20 text-violet-400' 
-                    : 'border-white/10 bg-white/5 text-slate-400 hover:bg-white/10'
+                    ? 'border-blue-400 bg-blue-500/20 text-blue-400' 
+                    : 'border-white/10 bg-white/5 text-gray-400 hover:bg-white/10'
                 }`}
               >
                 <Banknote className="w-4 h-4" />
@@ -120,39 +110,35 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
             </div>
           </div>
           
-          <div className="p-4 bg-slate-700/20 rounded-lg border border-white/5">
-            <h4 className="text-sm font-medium text-white mb-2">Impact Projection</h4>
-            <div className="space-y-1 text-sm text-slate-400">
+          <div className="p-3 bg-white/5 rounded border border-white/10">
+            <h4 className="text-sm font-medium text-white mb-2">Impact Estimate</h4>
+            <div className="space-y-1 text-sm text-gray-400">
               <div className="flex justify-between">
                 <span>Your donation:</span>
                 <span className="text-white">${amount || '0'}</span>
               </div>
               <div className="flex justify-between">
-                <span>People you'll help:</span>
-                <span className="text-violet-400">~{Math.ceil((parseFloat(amount) || 0) / 800)}</span>
+                <span>People helped:</span>
+                <span className="text-green-400">~{Math.ceil((parseFloat(amount) || 0) / 800)}</span>
               </div>
               <div className="flex justify-between">
-                <span>AI matching time:</span>
+                <span>Matching:</span>
                 <span className="text-blue-400">24-48 hours</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Impact tracking:</span>
-                <span className="text-emerald-400">Real-time updates</span>
               </div>
             </div>
           </div>
           
-          <div className="flex gap-3 pt-2">
+          <div className="flex gap-2 pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300"
+              className="flex-1 px-4 py-2 rounded bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 px-4 py-3 rounded-lg bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30"
+              className="flex-1 px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all"
             >
               Donate Now
             </button>

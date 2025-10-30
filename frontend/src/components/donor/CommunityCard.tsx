@@ -20,7 +20,7 @@ interface CommunityCardProps extends Community {
 }
 
 const CommunityCard = ({ 
-  id, name, location, category, raised, target, borrowers, rate, description, delay, onSupport 
+  id, name, location, category, raised, target, borrowers, rate, description, onSupport 
 }: CommunityCardProps) => {
   const progress = (raised / target) * 100;
   const [showDetails, setShowDetails] = useState(false);
@@ -32,157 +32,120 @@ const CommunityCard = ({
   return (
     <>
       <div 
-        className="group relative glass-morphism rounded-3xl p-6 sm:p-8 border border-silver-edge/20 hover:border-neo-mint/40 transition-all duration-700 neo-shadow cursor-pointer overflow-hidden"
-        style={{animation: 'slideUp 0.8s ease-out', animationDelay: `${delay}ms`, animationFillMode: 'both'}}
+        className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-blue-400/50 transition-all cursor-pointer"
         onClick={() => setShowDetails(true)}
       >
-        {/* Floating geometric accent */}
-        <div className="absolute top-4 right-4 w-3 h-3 bg-wealth-gold rounded-full animate-pulse"></div>
-        <div className="absolute top-6 right-8 w-2 h-2 bg-neo-mint/60 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
-        
-        {/* Main content */}
-        <div className="relative z-10">
-          <div className="mb-6">
-            <div className="flex items-start justify-between mb-3">
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-xl sm:text-2xl font-bold text-neo-mint font-bricolage leading-tight group-hover:text-ghost-white transition-colors duration-500">
-                    {name}
-                  </h3>
-                  <div className="px-2 py-1 bg-neo-mint/20 rounded-lg border border-neo-mint/30">
-                    <span className="text-neo-mint text-xs font-mono font-semibold">AI MANAGED</span>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 text-silver-edge text-sm font-mono mb-2">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4 shrink-0 text-trust-blue" />
-                    <span>{location}</span>
-                  </div>
-                  <span className="w-1 h-1 bg-silver-edge rounded-full"></span>
-                  <span className="uppercase tracking-wider text-xs">{category}</span>
-                </div>
-                <p className="text-silver-edge/80 text-xs font-manrope italic">
-                  Your donation helps people in {location} access {category} opportunities
-                </p>
-              </div>
-              
-              <div className="px-4 py-2 bg-trust-blue/20 rounded-2xl border border-trust-blue/30">
-                <div className="text-trust-blue font-mono font-bold text-sm">
-                  {borrowers}
-                </div>
-                <div className="text-trust-blue/70 font-mono text-xs uppercase tracking-wider">
-                  Helped
-                </div>
-              </div>
-            </div>
-          </div>
-        
-          {/* Progress visualization */}
-          <div className="mb-6 space-y-4">
-            <div className="flex justify-between items-baseline">
-              <div>
-                <div className="text-2xl font-bold text-ghost-white font-bricolage">
-                  ${raised.toLocaleString()}
-                </div>
-                <div className="text-silver-edge text-sm font-mono">
-                  raised of ${target.toLocaleString()}
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-xl font-bold text-neo-mint font-mono">
-                  {Math.round(progress)}%
-                </div>
-                <div className="text-silver-edge text-xs font-mono uppercase tracking-wider">
-                  Complete
-                </div>
+        <div className="mb-4">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1">
+              <h3 className="text-xl font-bold text-white mb-1">
+                {name}
+              </h3>
+              <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+                <MapPin className="w-4 h-4" />
+                <span>{location}</span>
+                <span>•</span>
+                <span className="capitalize">{category}</span>
               </div>
             </div>
             
-            {/* Enhanced progress bar */}
-            <div className="relative">
-              <div className="h-3 bg-ash-gray rounded-full overflow-hidden border border-silver-edge/20">
-                <div 
-                  className="h-full bg-neo-gradient rounded-full transition-all duration-1500 relative overflow-hidden"
-                  style={{width: `${progress}%`}}
-                >
-                  <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent animate-pulse"></div>
-                </div>
+            <div className="text-center">
+              <div className="text-blue-400 font-bold text-lg">
+                {borrowers}
               </div>
-              <div className="absolute -top-1 bg-wealth-gold w-2 h-5 rounded-sm transition-all duration-1500" 
-                   style={{left: `${Math.min(progress, 95)}%`}}>
+              <div className="text-gray-400 text-xs">
+                Helped
               </div>
             </div>
           </div>
-        
-          {/* Bottom action area */}
-          <div className="flex items-center justify-between pt-6 border-t border-silver-edge/20">
-            <div className="flex items-center gap-4 text-silver-edge text-sm font-mono">
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4 text-trust-blue" />
-                <span>{borrowers} recipients funded</span>
+        </div>
+      
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-2">
+            <div>
+              <div className="text-xl font-bold text-white">
+                ${raised.toLocaleString()}
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-neo-mint rounded-full animate-pulse"></div>
-                <span className="text-neo-mint text-xs">AI Active</span>
+              <div className="text-gray-400 text-sm">
+                of ${target.toLocaleString()}
               </div>
             </div>
-                          <button 
-                className="group flex items-center gap-2 px-6 py-3 bg-neo-gradient hover:bg-trust-gradient rounded-2xl text-carbon-black font-semibold transition-all duration-500 neo-shadow text-sm font-bricolage"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSupport(communityData);
-                }}
-              >
-                Donate Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
+            <div className="text-right">
+              <div className="text-lg font-bold text-green-400">
+                {Math.round(progress)}%
+              </div>
+            </div>
           </div>
+          
+          <div className="w-full bg-gray-700 rounded-full h-2">
+            <div 
+              className="bg-linear-to-r from-blue-500 to-green-400 h-2 rounded-full transition-all duration-300"
+              style={{width: `${progress}%`}}
+            ></div>
+          </div>
+        </div>
+      
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-gray-400 text-sm">
+            <Users className="w-4 h-4" />
+            <span>{borrowers} people helped</span>
+          </div>
+          <button 
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-medium transition-all"
+            onClick={(e) => {
+              e.stopPropagation();
+              onSupport(communityData);
+            }}
+          >
+            Donate <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
       {showDetails && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 max-w-2xl w-full border border-white/10 shadow-2xl">
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-2xl font-bold text-white font-clash">{name}</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-white">{name}</h3>
               <button 
                 onClick={() => setShowDetails(false)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="p-1 hover:bg-gray-700 rounded"
               >
                 <X className="w-5 h-5 text-white" />
               </button>
             </div>
             
-            <div className="space-y-4 font-inter">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-slate-400 text-sm">Location</p>
-                  <p className="text-white font-semibold">{location}</p>
+                  <p className="text-gray-400">Location</p>
+                  <p className="text-white">{location}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-sm">Category</p>
-                  <p className="text-white font-semibold">{category}</p>
+                  <p className="text-gray-400">Category</p>
+                  <p className="text-white capitalize">{category}</p>
                 </div>
               </div>
               
               <div>
-                <p className="text-slate-400 text-sm mb-2">Description</p>
-                <p className="text-white">{description}</p>
+                <p className="text-gray-400 text-sm mb-1">Description</p>
+                <p className="text-white text-sm">{description}</p>
               </div>
               
-              <div className="p-4 bg-slate-700/30 rounded-lg">
+              <div className="p-3 bg-gray-700/50 rounded">
                 <div className="flex justify-between mb-2">
-                  <span className="text-slate-400">Progress</span>
+                  <span className="text-gray-400 text-sm">Progress</span>
                   <span className="text-white font-bold">{Math.round(progress)}%</span>
                 </div>
-                <div className="h-3 bg-slate-700 rounded-full overflow-hidden mb-2">
+                <div className="w-full bg-gray-600 rounded-full h-2 mb-2">
                   <div 
-                    className="h-full bg-linear-to-r from-violet-500 to-purple-500 rounded-full"
+                    className="h-full bg-blue-500 rounded-full"
                     style={{width: `${progress}%`}}
                   ></div>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-slate-400">${raised.toLocaleString()} raised</span>
-                  <span className="text-slate-400">${target.toLocaleString()} goal</span>
+                <div className="flex justify-between text-xs text-gray-400">
+                  <span>${raised.toLocaleString()} raised</span>
+                  <span>${target.toLocaleString()} goal</span>
                 </div>
               </div>
               
@@ -191,9 +154,9 @@ const CommunityCard = ({
                   onSupport(communityData);
                   setShowDetails(false);
                 }}
-                className="w-full px-6 py-3 rounded-lg bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 rounded bg-blue-500 hover:bg-blue-600 text-white font-medium transition-colors flex items-center justify-center gap-2"
               >
-                <CreditCard className="w-5 h-5" />
+                <CreditCard className="w-4 h-4" />
                 Support This Community
               </button>
             </div>
