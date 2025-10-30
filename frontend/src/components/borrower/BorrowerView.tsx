@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Shield, CheckCircle, Clock, User, Settings, CreditCard, FileText, TrendingUp, MessageSquare, DollarSign, Plus, Menu, BarChart3 } from 'lucide-react';
+import { Shield, CheckCircle, Clock, User, Settings, CreditCard, FileText, TrendingUp, MessageSquare, DollarSign, Plus, Menu, BarChart3, AlertCircle, Calendar, User2 } from 'lucide-react';
 import StatsCard from '../shared/StatsCard';
 import BorrowerForm, { type LoanFormData } from './BorrowerForm';
 import LoanRequestCard, { type LoanRequest } from './LoanRequestCard';
@@ -11,15 +11,16 @@ import PaymentTracker from './PaymentTracker';
 import ActionCenter from './ActionCenter';
 
 const BorrowerView = () => {
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'application' | 'credibility' | 'payments' | 'actions' | 'profile'>('dashboard');
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'application' | 'credibility' | 'payments' | 'actions' | 'profile' | 'loan-details'>('dashboard');
   const [showVoiceChat, setShowVoiceChat] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedLoanRequest, setSelectedLoanRequest] = useState<LoanRequest | null>(null);
   const [requests, setRequests] = useState<LoanRequest[]>([
     { 
       id: 1, 
       amount: 5000, 
       duration: 12, 
-      reason: 'Small business expansion', 
+      reason: 'Local Coffee Shop Equipment & Inventory Purchase', 
       status: 'action_required', 
       aiScore: 78, 
       date: '2 days ago',
@@ -36,12 +37,12 @@ const BorrowerView = () => {
         {
           id: 'action_1',
           type: 'document_upload',
-          title: 'Business Plan Required',
-          description: 'Please upload a detailed business plan showing how you will use the loan funds and your revenue projections.',
+          title: 'Coffee Shop Business Plan & Equipment List',
+          description: 'Please upload a detailed business plan for your coffee shop including equipment specifications, supplier quotes, and projected customer traffic.',
           priority: 'high',
           dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-          requiredDocuments: ['Business Plan PDF', 'Financial Projections'],
-          adminNote: 'Your application shows promise, but we need more details about your business model.',
+          requiredDocuments: ['Business Plan PDF', 'Equipment Quotes', 'Lease Agreement'],
+          adminNote: 'Your coffee shop concept looks promising. We need detailed equipment lists and supplier agreements to assess the loan viability.',
           completed: false
         },
         {
@@ -55,14 +56,14 @@ const BorrowerView = () => {
           completed: false
         }
       ],
-      adminFeedback: 'Your application looks strong overall. The AI score of 78 is above average. Once you complete the pending actions, we can move forward with approval.',
+      adminFeedback: 'Your coffee shop loan application shows strong potential. The location and business model look promising. Once you submit the detailed equipment plan and supplier agreements, we can move forward with approval.',
       lastUpdated: '1 hour ago'
     },
     { 
       id: 2, 
       amount: 3000, 
       duration: 6, 
-      reason: 'Medical emergency', 
+      reason: 'Emergency Dental Surgery & Recovery Expenses', 
       status: 'reviewing', 
       aiScore: 82, 
       date: '5 hours ago',
@@ -74,14 +75,14 @@ const BorrowerView = () => {
       riskFactors: [
         'First-time borrower on platform'
       ],
-      adminFeedback: 'AI review in progress. Your credibility score is excellent. Expected decision within 24 hours.',
+      adminFeedback: 'Your dental surgery loan is being fast-tracked due to medical urgency. Your excellent payment history qualifies you for emergency processing. Expected decision within 24 hours.',
       lastUpdated: '3 hours ago'
     },
     {
       id: 3,
       amount: 8000,
       duration: 24,
-      reason: 'Home renovation',
+      reason: 'Kitchen Remodel: Cabinets, Appliances & Countertops',
       status: 'action_required',
       aiScore: 65,
       date: '1 week ago',
@@ -97,25 +98,48 @@ const BorrowerView = () => {
         {
           id: 'action_3',
           type: 'clarification',
-          title: 'Renovation Details Needed',
-          description: 'Please provide more specific details about the renovation project and contractor quotes.',
+          title: 'Kitchen Remodel Contractor Bids & Timeline',
+          description: 'Please provide detailed contractor quotes for cabinet installation, appliance purchases, and countertop materials with project timeline.',
           priority: 'high',
           dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-          adminNote: 'We need to understand the scope of work to assess loan viability.',
+          adminNote: 'We need verified contractor quotes and a realistic timeline to ensure the loan amount covers all renovation costs.',
           completed: false
         },
         {
           id: 'action_4',
           type: 'document_upload',
-          title: 'Property Documents',
-          description: 'Upload property deed and recent property tax assessment.',
+          title: 'Property Ownership & Valuation Documents',
+          description: 'Upload property deed, recent home appraisal, and detailed contractor estimates for the kitchen remodel.',
           priority: 'medium',
-          requiredDocuments: ['Property Deed', 'Tax Assessment', 'Contractor Quotes'],
+          requiredDocuments: ['Property Deed', 'Home Appraisal', 'Contractor Estimates', 'Building Permits'],
           completed: true
         }
       ],
-      adminFeedback: 'Your renovation loan application is under review. The AI flagged some concerns about the loan-to-value ratio. Please complete the pending actions for manual review.',
+      adminFeedback: 'Your kitchen remodel loan is under review. The proposed renovation should increase your home value significantly. We need final contractor quotes to ensure the loan amount aligns with actual costs.',
       lastUpdated: '2 days ago'
+    },
+    {
+      id: 4,
+      amount: 12000,
+      duration: 18,
+      reason: 'Electric Vehicle Purchase & Home Charging Station Setup',
+      status: 'approved',
+      aiScore: 91,
+      rate: 4.2,
+      monthlyPayment: 723,
+      totalInterest: 1014,
+      date: '3 weeks ago',
+      strengthFactors: [
+        'Excellent credit history',
+        'Stable tech sector employment',
+        'Environmental loan incentive eligibility',
+        'Home ownership verified'
+      ],
+      riskFactors: [
+        'First electric vehicle purchase'
+      ],
+      adminFeedback: 'Congratulations! Your EV loan has been approved. You qualify for our green energy incentive rate. The charging station installation will also increase your home value.',
+      lastUpdated: '1 week ago'
     }
   ]);
   
@@ -268,8 +292,11 @@ const BorrowerView = () => {
   };
 
   const handleViewDetails = (requestId: number) => {
-    console.log(`Viewing details for request ${requestId}`);
-    // This could open a detailed view modal
+    const request = requests.find(r => r.id === requestId);
+    if (request) {
+      setSelectedLoanRequest(request);
+      setCurrentPage('loan-details');
+    }
   };
   
   // Navigation items
@@ -405,6 +432,248 @@ const BorrowerView = () => {
             <BorrowerProfile delay={0} />
           </div>
         );
+
+      case 'loan-details':
+        return selectedLoanRequest ? (
+          <div className="max-w-4xl mx-auto">
+            {/* Back Navigation */}
+            <div className="mb-6">
+              <button
+                onClick={() => setCurrentPage('dashboard')}
+                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Back to Dashboard
+              </button>
+            </div>
+
+            {/* Detailed Loan View */}
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden">
+              {/* Header */}
+              <div className="p-6 border-b border-white/10">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h1 className="text-2xl font-bold text-white mb-1">Loan Request Details</h1>
+                    <p className="text-slate-400 text-sm">Request ID: #{selectedLoanRequest.id}</p>
+                  </div>
+                  <div className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    selectedLoanRequest.status === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                    selectedLoanRequest.status === 'pending' ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' :
+                    selectedLoanRequest.status === 'reviewing' ? 'bg-violet-500/10 text-violet-400 border border-violet-500/20' :
+                    selectedLoanRequest.status === 'action_required' ? 'bg-orange-500/10 text-orange-400 border border-orange-500/20' :
+                    'bg-red-500/10 text-red-400 border border-red-500/20'
+                  } flex items-center gap-2`}>
+                    {selectedLoanRequest.status === 'approved' && <CheckCircle className="w-4 h-4" />}
+                    {selectedLoanRequest.status === 'pending' && <Clock className="w-4 h-4" />}
+                    {selectedLoanRequest.status === 'reviewing' && <AlertCircle className="w-4 h-4" />}
+                    {selectedLoanRequest.status === 'action_required' && <AlertCircle className="w-4 h-4" />}
+                    {selectedLoanRequest.status === 'rejected' && <AlertCircle className="w-4 h-4" />}
+                    {selectedLoanRequest.status.replace('_', ' ').toUpperCase()}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                {/* Basic Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold text-slate-400 block mb-1">Loan Amount</label>
+                      <div className="text-2xl font-bold text-white">${selectedLoanRequest.amount.toLocaleString()}</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-slate-400 block mb-1">Duration</label>
+                      <div className="text-lg text-white">{selectedLoanRequest.duration} months</div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-semibold text-slate-400 block mb-1">Purpose</label>
+                      <div className="text-base text-white">{selectedLoanRequest.reason}</div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-semibold text-slate-400 block mb-1">Application Date</label>
+                      <div className="flex items-center gap-2 text-white text-base">
+                        <Calendar className="w-4 h-4" />
+                        {selectedLoanRequest.date}
+                      </div>
+                    </div>
+                    {selectedLoanRequest.lastUpdated && (
+                      <div>
+                        <label className="text-sm font-semibold text-slate-400 block mb-1">Last Updated</label>
+                        <div className="text-white text-base">{selectedLoanRequest.lastUpdated}</div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* AI Score */}
+                {selectedLoanRequest.aiScore && (
+                  <div className="bg-white/5 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">AI Assessment</h3>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm text-slate-300">Overall Score</span>
+                      <span className="text-xl font-bold text-violet-400">{selectedLoanRequest.aiScore}/100</span>
+                    </div>
+                    <div className="h-2 bg-slate-700 rounded-full overflow-hidden mb-4">
+                      <div 
+                        className="h-full bg-linear-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-1000"
+                        style={{width: `${selectedLoanRequest.aiScore}%`}}
+                      ></div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Strength Factors */}
+                      {selectedLoanRequest.strengthFactors && selectedLoanRequest.strengthFactors.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-emerald-400 mb-3 flex items-center gap-2">
+                            <CheckCircle className="w-4 h-4" />
+                            Strength Factors
+                          </h4>
+                          <ul className="space-y-2">
+                            {selectedLoanRequest.strengthFactors.map((factor, index) => (
+                              <li key={index} className="text-sm text-slate-300 flex items-start gap-2">
+                                <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full mt-2 shrink-0"></div>
+                                <span>{factor}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {/* Risk Factors */}
+                      {selectedLoanRequest.riskFactors && selectedLoanRequest.riskFactors.length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-orange-400 mb-3 flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4" />
+                            Risk Factors
+                          </h4>
+                          <ul className="space-y-2">
+                            {selectedLoanRequest.riskFactors.map((factor, index) => (
+                              <li key={index} className="text-sm text-slate-300 flex items-start gap-2">
+                                <div className="w-1.5 h-1.5 bg-orange-400 rounded-full mt-2 shrink-0"></div>
+                                <span>{factor}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+              {/* Admin Feedback */}
+              {selectedLoanRequest.adminFeedback && (
+                <div className="bg-blue-500/10 rounded-xl p-6 border border-blue-500/20">
+                  <h3 className="text-lg font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                    <User2 className="w-5 h-5" />
+                    Admin Feedback
+                  </h3>
+                  <p className="text-blue-200 text-sm leading-relaxed">{selectedLoanRequest.adminFeedback}</p>
+                </div>
+              )}                {/* Pending Actions */}
+                {selectedLoanRequest.pendingActions && selectedLoanRequest.pendingActions.length > 0 && (
+                  <div className="bg-orange-500/10 rounded-xl p-6 border border-orange-500/20">
+                    <h3 className="text-lg font-semibold text-orange-300 mb-4 flex items-center gap-2">
+                      <AlertCircle className="w-5 h-5" />
+                      Actions Required ({selectedLoanRequest.pendingActions.length})
+                    </h3>
+                    <div className="space-y-4">
+                      {selectedLoanRequest.pendingActions.map((action) => (
+                        <div key={action.id} className="bg-white/5 rounded-lg p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <h4 className="text-white font-medium text-base">{action.title}</h4>
+                            <span className={`text-xs px-2 py-1 rounded text-white font-medium ${
+                              action.priority === 'high' ? 'bg-red-500' :
+                              action.priority === 'medium' ? 'bg-yellow-500' :
+                              'bg-blue-500'
+                            }`}>
+                              {action.priority.toUpperCase()}
+                            </span>
+                          </div>
+                          <p className="text-slate-300 text-sm mb-3 leading-relaxed">{action.description}</p>
+                          {action.dueDate && (
+                            <p className="text-sm text-slate-400 mb-3">
+                              <strong>Due:</strong> {action.dueDate.toLocaleDateString()}
+                            </p>
+                          )}
+                          {action.requiredDocuments && action.requiredDocuments.length > 0 && (
+                            <div className="mb-4">
+                              <p className="text-sm font-semibold text-slate-400 mb-2">Required Documents:</p>
+                              <ul className="text-sm text-slate-300 space-y-1">
+                                {action.requiredDocuments.map((doc, index) => (
+                                  <li key={index} className="flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 bg-slate-400 rounded-full"></div>
+                                    {doc}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {action.adminNote && (
+                            <div className="border-l-4 border-blue-500/50 pl-4 bg-blue-500/5 rounded-r p-3">
+                              <p className="text-sm text-blue-300 italic">
+                                <strong>Admin Note:</strong> {action.adminNote}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Loan Terms */}
+                {(selectedLoanRequest.rate || selectedLoanRequest.monthlyPayment || selectedLoanRequest.totalInterest) && (
+                  <div className="bg-white/5 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-white mb-4">Loan Terms</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {selectedLoanRequest.rate && (
+                        <div className="text-center">
+                          <label className="text-sm font-semibold text-slate-400 block mb-1">Interest Rate</label>
+                          <div className="text-xl font-bold text-white">{selectedLoanRequest.rate}%</div>
+                        </div>
+                      )}
+                      {selectedLoanRequest.monthlyPayment && (
+                        <div className="text-center">
+                          <label className="text-sm font-semibold text-slate-400 block mb-1">Monthly Payment</label>
+                          <div className="text-xl font-bold text-white">${selectedLoanRequest.monthlyPayment}</div>
+                        </div>
+                      )}
+                      {selectedLoanRequest.totalInterest && (
+                        <div className="text-center">
+                          <label className="text-sm font-semibold text-slate-400 block mb-1">Total Interest</label>
+                          <div className="text-xl font-bold text-white">${selectedLoanRequest.totalInterest}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-white/10">
+                  <button
+                    onClick={() => setCurrentPage('dashboard')}
+                    className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl transition-colors font-medium"
+                  >
+                    Back to Dashboard
+                  </button>
+                  {selectedLoanRequest.status === 'action_required' && (
+                    <button 
+                      onClick={() => setCurrentPage('actions')}
+                      className="px-6 py-3 bg-violet-500 hover:bg-violet-600 text-white rounded-xl transition-colors font-medium"
+                    >
+                      Complete Actions
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null;
 
       default:
         return null;

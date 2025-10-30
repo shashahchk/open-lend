@@ -38,8 +38,8 @@ interface LoanRequestCardProps extends LoanRequest {
 }
 
 const LoanRequestCard = ({ 
-  amount, duration, reason, status, aiScore, rate, date, delay,
-  monthlyPayment, pendingActions, adminFeedback, lastUpdated
+  amount, duration, reason, status, aiScore, date, delay,
+  pendingActions, onViewDetails
 }: LoanRequestCardProps) => {
   const statusConfig = {
     pending: { icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', label: 'Under Review' },
@@ -51,16 +51,20 @@ const LoanRequestCard = ({
   
   const statusInfo = statusConfig[status];
   const StatusIcon = statusInfo.icon;
+  const hasActions = pendingActions && pendingActions.length > 0;
   
   return (
     <div 
-      className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all duration-300"
+      className={`bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10 hover:border-white/20 hover:bg-slate-800/70 transition-all duration-300 ${onViewDetails ? 'cursor-pointer' : 'cursor-default'} group`}
       style={{animation: 'slideUp 0.6s ease-out', animationDelay: `${delay}ms`, animationFillMode: 'both'}}
+      onClick={onViewDetails ? () => onViewDetails() : undefined}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <h3 className="text-xl font-bold text-white mb-1">${amount.toLocaleString()}</h3>
+          <h3 className="text-xl font-bold text-white mb-1 group-hover:text-violet-300 transition-colors">
+            ${amount.toLocaleString()}
+          </h3>
           <p className="text-slate-400 text-sm">{duration} months • {reason}</p>
           <p className="text-xs text-slate-500 mt-1">{date}</p>
         </div>
@@ -70,14 +74,14 @@ const LoanRequestCard = ({
         </div>
       </div>
       
-      {/* AI Score - Simplified */}
+      {/* Simple AI Score Bar */}
       {aiScore && (
-        <div className="mb-4 p-4 bg-white/5 rounded-xl">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-slate-300">AI Score</span>
-            <span className="text-lg font-bold text-violet-400">{aiScore}/100</span>
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-slate-400">AI Score</span>
+            <span className="text-sm font-semibold text-violet-400">{aiScore}/100</span>
           </div>
-          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+          <div className="h-1.5 bg-slate-700 rounded-full overflow-hidden">
             <div 
               className="h-full bg-linear-to-r from-violet-500 to-purple-500 rounded-full transition-all duration-1000"
               style={{width: `${aiScore}%`}}
@@ -86,60 +90,18 @@ const LoanRequestCard = ({
         </div>
       )}
 
-      {/* Admin Feedback */}
-      {adminFeedback && (
-        <div className="mb-4 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
-          <p className="text-blue-300 text-sm">{adminFeedback}</p>
-          {lastUpdated && (
-            <p className="text-xs text-slate-400 mt-2">Updated {lastUpdated}</p>
-          )}
+      {/* Action Required Indicator */}
+      {hasActions && (
+        <div className="flex items-center gap-2 text-orange-400 text-sm">
+          <AlertCircle className="w-4 h-4" />
+          <span>{pendingActions.length} action{pendingActions.length > 1 ? 's' : ''} required</span>
         </div>
       )}
 
-      {/* Actions Required - Simplified */}
-      {pendingActions && pendingActions.length > 0 && (
-        <div className="mb-4 p-4 bg-orange-500/10 rounded-xl border border-orange-500/20">
-          <div className="flex items-center gap-2 mb-3">
-            <AlertCircle className="w-4 h-4 text-orange-400" />
-            <h4 className="text-sm font-semibold text-orange-300">Actions Required</h4>
-          </div>
-          <div className="space-y-2">
-            {pendingActions.slice(0, 2).map((action) => (
-              <div key={action.id} className="p-3 bg-white/5 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h5 className="text-sm font-medium text-white">{action.title}</h5>
-                    <p className="text-xs text-slate-400 mt-1">{action.description}</p>
-                  </div>
-                  <span className={`text-xs px-2 py-1 rounded text-white ${
-                    action.priority === 'high' ? 'bg-red-500' :
-                    action.priority === 'medium' ? 'bg-yellow-500' :
-                    'bg-blue-500'
-                  }`}>
-                    {action.priority}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Loan Details - Simple */}
-      {(monthlyPayment || rate) && (
-        <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-          {monthlyPayment && (
-            <div>
-              <p className="text-xs text-slate-400">Monthly Payment</p>
-              <p className="text-white font-semibold">${monthlyPayment}</p>
-            </div>
-          )}
-          {rate && (
-            <div>
-              <p className="text-xs text-slate-400">Interest Rate</p>
-              <p className="text-white font-semibold">{rate}%</p>
-            </div>
-          )}
+      {/* Click to view more indicator */}
+      {onViewDetails && (
+        <div className="text-xs text-slate-500 mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
+          Click to view details →
         </div>
       )}
     </div>
