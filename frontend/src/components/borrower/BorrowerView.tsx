@@ -506,7 +506,7 @@ const BorrowerView = () => {
               <h1 className="text-2xl font-bold text-white">
                 {navigationItems.find(item => item.id === currentPage)?.label || 'Dashboard'}
               </h1>
-              <p className="text-slate-400 text-sm">Manage your lending journey</p>
+              <p className="text-slate-400 text-sm">Manage your loan journey</p>
             </div>
           </div>
           
