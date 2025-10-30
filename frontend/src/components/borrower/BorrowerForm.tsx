@@ -48,8 +48,25 @@ const BorrowerForm = ({ onSubmit, onCancel }: BorrowerFormProps) => {
   };
   
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto">
-      <div className="bg-linear-to-br from-slate-800 to-slate-900 rounded-xl sm:rounded-2xl p-6 sm:p-8 max-w-3xl w-full border border-white/10 shadow-2xl my-8">
+    <div 
+      className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onCancel();
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          onCancel();
+        }
+      }}
+      tabIndex={-1}
+    >
+      <div className="flex items-start justify-center min-h-full p-4 sm:p-6">
+        <div 
+          className="bg-linear-to-br from-slate-800 to-slate-900 rounded-xl sm:rounded-2xl p-6 sm:p-8 max-w-3xl w-full border border-white/10 shadow-2xl my-8"
+          onClick={(e) => e.stopPropagation()}
+        >
         <div className="flex justify-between items-center mb-6">
           <div>
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 font-clash">Loan Application</h3>
@@ -287,6 +304,7 @@ const BorrowerForm = ({ onSubmit, onCancel }: BorrowerFormProps) => {
             )}
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
