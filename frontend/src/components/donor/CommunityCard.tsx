@@ -45,10 +45,15 @@ const CommunityCard = ({
           <div className="mb-6">
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h3 className="text-xl sm:text-2xl font-bold text-neo-mint mb-2 font-bricolage leading-tight group-hover:text-ghost-white transition-colors duration-500">
-                  {name}
-                </h3>
-                <div className="flex items-center gap-3 text-silver-edge text-sm font-mono">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="text-xl sm:text-2xl font-bold text-neo-mint font-bricolage leading-tight group-hover:text-ghost-white transition-colors duration-500">
+                    {name}
+                  </h3>
+                  <div className="px-2 py-1 bg-neo-mint/20 rounded-lg border border-neo-mint/30">
+                    <span className="text-neo-mint text-xs font-mono font-semibold">AI MANAGED</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-silver-edge text-sm font-mono mb-2">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4 shrink-0 text-trust-blue" />
                     <span>{location}</span>
@@ -56,14 +61,17 @@ const CommunityCard = ({
                   <span className="w-1 h-1 bg-silver-edge rounded-full"></span>
                   <span className="uppercase tracking-wider text-xs">{category}</span>
                 </div>
+                <p className="text-silver-edge/80 text-xs font-manrope italic">
+                  Your donation helps people in {location} access {category} opportunities
+                </p>
               </div>
               
-              <div className="px-4 py-2 bg-growth-green/20 rounded-2xl border border-growth-green/30">
-                <div className="text-growth-green font-mono font-bold text-sm">
-                  {rate}%
+              <div className="px-4 py-2 bg-trust-blue/20 rounded-2xl border border-trust-blue/30">
+                <div className="text-trust-blue font-mono font-bold text-sm">
+                  {borrowers}
                 </div>
-                <div className="text-growth-green/70 font-mono text-xs uppercase tracking-wider">
-                  APR
+                <div className="text-trust-blue/70 font-mono text-xs uppercase tracking-wider">
+                  Helped
                 </div>
               </div>
             </div>
@@ -108,19 +116,25 @@ const CommunityCard = ({
         
           {/* Bottom action area */}
           <div className="flex items-center justify-between pt-6 border-t border-silver-edge/20">
-            <div className="flex items-center gap-3 text-silver-edge text-sm font-mono">
-              <Users className="w-4 h-4 text-trust-blue" />
-              <span>{borrowers} builders active</span>
+            <div className="flex items-center gap-4 text-silver-edge text-sm font-mono">
+              <div className="flex items-center gap-2">
+                <Users className="w-4 h-4 text-trust-blue" />
+                <span>{borrowers} recipients funded</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-neo-mint rounded-full animate-pulse"></div>
+                <span className="text-neo-mint text-xs">AI Active</span>
+              </div>
             </div>
-            <button 
-              className="group flex items-center gap-2 px-4 py-2 bg-neo-gradient hover:bg-trust-gradient rounded-2xl text-carbon-black font-semibold transition-all duration-500 neo-shadow text-sm font-bricolage"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSupport(communityData);
-              }}
-            >
-              Fund <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+                          <button 
+                className="group flex items-center gap-2 px-6 py-3 bg-neo-gradient hover:bg-trust-gradient rounded-2xl text-carbon-black font-semibold transition-all duration-500 neo-shadow text-sm font-bricolage"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onSupport(communityData);
+                }}
+              >
+                Donate Now <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
           </div>
         </div>
       </div>

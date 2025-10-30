@@ -8,7 +8,6 @@ import ChatWidget from './ChatWidget';
 import CredibilityDashboard from './CredibilityDashboard';
 import VoiceChat from './VoiceChat';
 import PaymentTracker from './PaymentTracker';
-import NotificationSystem from './NotificationSystem';
 import ActionCenter from './ActionCenter';
 
 const BorrowerView = () => {
@@ -485,7 +484,7 @@ const BorrowerView = () => {
                 <MessageSquare className="w-4 h-4" />
                 Chat Support
               </button>
-              <NotificationSystem />
+              {/* <NotificationSystem /> */}
             </div>
           </div>
         </div>

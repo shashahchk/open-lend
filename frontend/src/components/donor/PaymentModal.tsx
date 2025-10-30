@@ -27,7 +27,7 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-bold text-white font-clash flex items-center gap-2">
             <Heart className="w-5 h-5 text-violet-400" />
-            Support {community.name}
+            Donate to {community.name}
           </h3>
           <button 
             onClick={onClose}
@@ -36,11 +36,30 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
             <X className="w-5 h-5 text-white" />
           </button>
         </div>
+
+        {/* Pool Explanation */}
+        <div className="mb-6 p-4 bg-linear-to-r from-violet-500/10 to-purple-500/10 rounded-lg border border-violet-500/20">
+          <h4 className="text-sm font-semibold text-violet-300 mb-2">How Your Donation Helps</h4>
+          <div className="space-y-2 text-xs text-slate-300">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
+              <span>Your donation supports {community.category} projects in {community.location}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
+              <span>AI finds the most impactful projects and people to help</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 bg-violet-400 rounded-full"></div>
+              <span>See exactly who you helped and track their progress</span>
+            </div>
+          </div>
+        </div>
         
         <form onSubmit={handleSubmit} className="space-y-4 font-inter">
           <div>
             <label className="block text-sm font-medium text-slate-400 mb-2">
-              Contribution Amount (USD)
+              Donation Amount (USD)
             </label>
             <div className="relative">
               <input
@@ -65,7 +84,7 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
               className="w-4 h-4 text-violet-500 bg-slate-600 border-slate-500 rounded focus:ring-violet-500"
             />
             <label htmlFor="recurring" className="text-sm text-white">
-              Make this a monthly recurring contribution
+              Make this a monthly recurring donation
             </label>
           </div>
           
@@ -102,19 +121,23 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
           </div>
           
           <div className="p-4 bg-slate-700/20 rounded-lg border border-white/5">
-            <h4 className="text-sm font-medium text-white mb-2">Impact Summary</h4>
+            <h4 className="text-sm font-medium text-white mb-2">Impact Projection</h4>
             <div className="space-y-1 text-sm text-slate-400">
               <div className="flex justify-between">
-                <span>Your contribution:</span>
+                <span>Your donation:</span>
                 <span className="text-white">${amount || '0'}</span>
               </div>
               <div className="flex justify-between">
-                <span>Expected return:</span>
-                <span className="text-emerald-400">{community.rate}% APR</span>
+                <span>People you'll help:</span>
+                <span className="text-violet-400">~{Math.ceil((parseFloat(amount) || 0) / 800)}</span>
               </div>
               <div className="flex justify-between">
-                <span>People impacted:</span>
-                <span className="text-violet-400">~{Math.ceil((parseFloat(amount) || 0) / 1000)}</span>
+                <span>AI matching time:</span>
+                <span className="text-blue-400">24-48 hours</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Impact tracking:</span>
+                <span className="text-emerald-400">Real-time updates</span>
               </div>
             </div>
           </div>
@@ -131,7 +154,7 @@ const PaymentModal = ({ community, onClose, onPayment }: PaymentModalProps) => {
               type="submit"
               className="flex-1 px-4 py-3 rounded-lg bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30"
             >
-              Contribute Now
+              Donate Now
             </button>
           </div>
         </form>
