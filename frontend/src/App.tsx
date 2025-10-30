@@ -1,13 +1,24 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import AnimatedBackground from './components/shared/AnimatedBackground';
 import Header from './components/shared/Header';
 import DonorView from './components/donor/DonorView';
 import BorrowerView from './components/borrower/BorrowerView';
 
-// Main App
-const App = () => {
+// Donor Layout with Header
+const DonorLayout = () => {
   const [userType, setUserType] = useState<'donor' | 'borrower'>('donor');
   
+  return (
+    <>
+      <Header userType={userType} setUserType={setUserType} />
+      <DonorView />
+    </>
+  );
+};
+
+// Main App
+const App = () => {
   return (
     <div className="min-h-screen bg-carbon-black text-ghost-white font-manrope flex flex-col relative overflow-hidden">
       <style>{`
@@ -160,9 +171,12 @@ const App = () => {
       `}</style>
       
       <AnimatedBackground />
-      <Header userType={userType} setUserType={setUserType} />
       
-      {userType === 'donor' ? <DonorView /> : <BorrowerView />}
+      <Routes>
+        <Route path="/" element={<Navigate to="/donor" replace />} />
+        <Route path="/donor" element={<DonorLayout />} />
+        <Route path="/borrower" element={<BorrowerView />} />
+      </Routes>
     </div>
   );
 };

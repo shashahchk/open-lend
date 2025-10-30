@@ -1,6 +1,25 @@
-import { CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { CheckCircle, Clock, AlertCircle, TrendingUp, DollarSign, FileText, Upload, MessageSquare, Eye, ExternalLink } from 'luc                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-export interface PendingAction {
+      {/* Loan Details - Simple */}
+      {(monthlyPayment || rate) && (
+        <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+          {monthlyPayment && (
+            <div>
+              <p className="text-xs text-slate-400">Monthly Payment</p>
+              <p className="text-white font-semibold">${monthlyPayment}</p>
+            </div>
+          )}
+          {rate && (
+            <div>
+              <p className="text-xs text-slate-400">Interest Rate</p>
+              <p className="text-white font-semibold">{rate}%</p>
+            </div>
+          )}rt interface PendingAction {
   id: string;
   type: 'document_upload' | 'verification' | 'clarification' | 'review';
   title: string;
@@ -39,7 +58,8 @@ interface LoanRequestCardProps extends LoanRequest {
 
 const LoanRequestCard = ({ 
   amount, duration, reason, status, aiScore, rate, date, delay,
-  monthlyPayment, pendingActions, adminFeedback, lastUpdated
+  monthlyPayment, totalInterest, riskFactors, strengthFactors, pendingActions,
+  adminFeedback, lastUpdated, onActionComplete, onUploadDocument, onViewDetails
 }: LoanRequestCardProps) => {
   const statusConfig = {
     pending: { icon: Clock, color: 'text-yellow-400', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', label: 'Under Review' },
@@ -86,7 +106,7 @@ const LoanRequestCard = ({
         </div>
       )}
 
-      {/* Admin Feedback */}
+      {/* Simple Status Info */}
       {adminFeedback && (
         <div className="mb-4 p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
           <p className="text-blue-300 text-sm">{adminFeedback}</p>
@@ -119,29 +139,63 @@ const LoanRequestCard = ({
                     {action.priority}
                   </span>
                 </div>
+                
+                {action.dueDate && (
+                  <p className="text-xs text-slate-400 font-inter mb-3">
+                    Due: {action.dueDate.toLocaleDateString()}
+                  </p>
+                )}
+                
+                <div className="flex gap-2">
+                  </div>
+                    <ExternalLink className="w-3 h-3" />
+                    Details
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      {/* Loan Details - Simple */}
-      {(monthlyPayment || rate) && (
-        <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
-          {monthlyPayment && (
-            <div>
-              <p className="text-xs text-slate-400">Monthly Payment</p>
-              <p className="text-white font-semibold">${monthlyPayment}</p>
-            </div>
-          )}
-          {rate && (
-            <div>
-              <p className="text-xs text-slate-400">Interest Rate</p>
-              <p className="text-white font-semibold">{rate}%</p>
-            </div>
+      {/* Admin Feedback Section */}
+      {adminFeedback && (
+        <div className="mb-4 p-4 bg-blue-500/10 rounded-lg border border-blue-500/30">
+          <div className="flex items-center gap-2 mb-2">
+            <MessageSquare className="w-4 h-4 text-blue-400" />
+            <h4 className="text-sm font-bold text-blue-400 font-clash">Admin Feedback</h4>
+          </div>
+          <p className="text-sm text-slate-300 font-inter">{adminFeedback}</p>
+          {lastUpdated && (
+            <p className="text-xs text-slate-400 mt-2 font-inter">Updated: {lastUpdated}</p>
           )}
         </div>
       )}
+      
+      {rate && monthlyPayment && (
+        <div className="grid grid-cols-2 gap-4 p-3 bg-slate-700/20 rounded-lg border border-white/5 mb-4">
+          <div>
+            <p className="text-xs text-slate-400 font-inter">Interest Rate</p>
+            <p className="text-sm font-bold text-white font-clash">{rate}% APR</p>
+          </div>
+          <div>
+            <p className="text-xs text-slate-400 font-inter">Monthly Payment</p>
+            <p className="text-sm font-bold text-white font-clash">${monthlyPayment}</p>
+          </div>
+        </div>
+      )}
+      
+      {totalInterest && (
+        <div className="flex items-center justify-between pt-3 border-t border-white/10">
+          <span className="text-slate-400 text-xs sm:text-sm flex items-center gap-2 font-inter">
+            <DollarSign className="w-3 h-3 sm:w-4 sm:h-4" />
+            Total Interest
+          </span>
+          <span className="text-white font-bold text-sm sm:text-base font-clash">${totalInterest.toLocaleString()}</span>
+        </div>
+      )}
+      
+      <p className="text-xs text-slate-500 mt-3 font-inter">Applied {date}</p>
     </div>
   );
 };

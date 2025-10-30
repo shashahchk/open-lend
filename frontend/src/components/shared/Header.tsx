@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Users, Menu, X } from 'lucide-react';
 
 interface HeaderProps {
@@ -7,6 +8,7 @@ interface HeaderProps {
 }
 
 const Header = ({ userType, setUserType }: HeaderProps) => {
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
@@ -32,7 +34,11 @@ const Header = ({ userType, setUserType }: HeaderProps) => {
           
           <div className="hidden sm:flex items-center gap-4">
             <button
-              onClick={() => setUserType(userType === 'donor' ? 'borrower' : 'donor')}
+              onClick={() => {
+                const newType = userType === 'donor' ? 'borrower' : 'donor';
+                setUserType(newType);
+                navigate(`/${newType}`);
+              }}
               className="px-6 py-3 rounded-2xl glass-morphism hover:bg-silver-edge/20 text-ghost-white border border-silver-edge/30 transition-all duration-500 text-sm font-medium font-mono uppercase tracking-wider neo-shadow group"
             >
               <span className="group-hover:text-neo-mint transition-colors">
@@ -56,7 +62,9 @@ const Header = ({ userType, setUserType }: HeaderProps) => {
           <div className="sm:hidden mt-4 pb-4 space-y-3 border-t border-white/10 pt-4">
             <button
               onClick={() => {
-                setUserType(userType === 'donor' ? 'borrower' : 'donor');
+                const newType = userType === 'donor' ? 'borrower' : 'donor';
+                setUserType(newType);
+                navigate(`/${newType}`);
                 setMobileMenuOpen(false);
               }}
               className="w-full px-5 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 text-sm font-medium font-inter"

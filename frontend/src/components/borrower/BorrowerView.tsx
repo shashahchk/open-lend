@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Shield, CheckCircle, Clock } from 'lucide-react';
+import { Shield, CheckCircle, Clock, User, Settings, CreditCard, FileText, TrendingUp, MessageSquare, DollarSign, Plus, Menu, BarChart3 } from 'lucide-react';
 import StatsCard from '../shared/StatsCard';
 import BorrowerForm, { type LoanFormData } from './BorrowerForm';
 import LoanRequestCard, { type LoanRequest } from './LoanRequestCard';
@@ -12,12 +12,9 @@ import NotificationSystem from './NotificationSystem';
 import ActionCenter from './ActionCenter';
 
 const BorrowerView = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [showCredibilityDashboard, setShowCredibilityDashboard] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'dashboard' | 'application' | 'credibility' | 'payments' | 'actions' | 'profile'>('dashboard');
   const [showVoiceChat, setShowVoiceChat] = useState(false);
-  const [showPaymentTracker, setShowPaymentTracker] = useState(false);
-  const [showActionCenter, setShowActionCenter] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [requests, setRequests] = useState<LoanRequest[]>([
     { 
       id: 1, 
@@ -199,7 +196,7 @@ const BorrowerView = () => {
     };
     
     setRequests([newRequest, ...requests]);
-    setShowForm(false);
+    setCurrentPage('dashboard');
     
     // Simulate AI processing
     setTimeout(() => {
@@ -276,299 +273,269 @@ const BorrowerView = () => {
     // This could open a detailed view modal
   };
   
-  return (
-    <div className="relative z-10 flex-1">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4" style={{animation: 'slideUp 0.6s ease-out'}}>
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-2 font-clash">Your Loan Dashboard</h2>
-            <p className="text-slate-400 text-base sm:text-lg font-inter">Manage your applications and track progress</p>
+  // Navigation items
+  const navigationItems = [
+    { id: 'dashboard', label: 'Overview', icon: BarChart3, color: 'from-blue-500 to-cyan-500' },
+    { id: 'application', label: 'Apply', icon: Plus, color: 'from-violet-500 to-purple-500' },
+    { id: 'credibility', label: 'Credibility', icon: TrendingUp, color: 'from-emerald-500 to-green-500' },
+    { id: 'payments', label: 'Payments', icon: CreditCard, color: 'from-orange-500 to-red-500' },
+    { id: 'actions', label: 'Actions', icon: FileText, color: 'from-amber-500 to-yellow-500' },
+    { id: 'profile', label: 'Profile', icon: User, color: 'from-pink-500 to-rose-500' },
+  ];
+
+  const renderPageContent = () => {
+    switch (currentPage) {
+      case 'dashboard':
+        return (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <StatsCard icon={Shield} label="Credibility Score" value="78/100" delay={100} />
+              <StatsCard icon={CheckCircle} label="Active Loans" value="1" delay={200} />
+              <StatsCard icon={Clock} label="Pending Reviews" value="1" delay={300} />
+            </div>
+            
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-white font-clash" style={{animation: 'slideUp 0.6s ease-out', animationDelay: '400ms', animationFillMode: 'both'}}>
+                Recent Applications
+              </h3>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {requests.slice(0, 2).map((request, idx) => (
+                  <LoanRequestCard 
+                    key={request.id} 
+                    {...request} 
+                    delay={500 + idx * 100}
+                    onActionComplete={(actionId) => handleActionComplete(request.id, actionId)}
+                    onUploadDocument={(actionId, documentType) => handleUploadDocument(request.id, actionId, documentType)}
+                    onViewDetails={() => handleViewDetails(request.id)}
+                  />
+                ))}
+              </div>
+              
+              {requests.length === 0 && (
+                <div className="text-center py-12 bg-linear-to-br from-slate-800/30 to-slate-900/30 rounded-2xl border border-white/5">
+                  <div className="w-16 h-16 mx-auto mb-6 bg-linear-to-br from-violet-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center">
+                    <DollarSign className="w-8 h-8 text-violet-400" />
+                  </div>
+                  <p className="text-slate-300 text-lg mb-6 font-semibold">Start Your Financial Journey</p>
+                  <p className="text-slate-400 mb-8 max-w-md mx-auto">Ready to unlock your potential? Apply for your first loan and join our community-driven lending platform.</p>
+                  <button
+                    onClick={() => setCurrentPage('application')}
+                    className="px-8 py-4 rounded-2xl bg-linear-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-semibold transition-all duration-300 shadow-lg shadow-violet-500/30 text-lg"
+                  >
+                    Apply for Your First Loan
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
+        );
+
+      case 'application':
+        return (
+          <div className="max-w-4xl mx-auto">
+            <BorrowerForm 
+              onSubmit={handleSubmit} 
+              onCancel={() => setCurrentPage('dashboard')} 
+            />
+          </div>
+        );
+
+      case 'credibility':
+        return (
+          <div className="max-w-6xl mx-auto">
+            <CredibilityDashboard 
+              currentScore={780}
+              paymentStreak={5}
+              totalLoans={2}
+              communityRating={4.7}
+            />
+          </div>
+        );
+
+      case 'payments':
+        return (
+          <div className="max-w-4xl mx-auto">
+            <PaymentTracker 
+              loanId="loan_12345"
+              totalAmount={5000}
+              monthlyPayment={456}
+              dueDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
+              paymentHistory={[
+                {
+                  date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+                  amount: 456,
+                  status: 'paid' as const,
+                  daysPaid: -2
+                },
+                {
+                  date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
+                  amount: 456,
+                  status: 'paid' as const,
+                  daysPaid: 0
+                }
+              ]}
+              onPayNow={() => {
+                console.log('Payment initiated');
+              }}
+            />
+          </div>
+        );
+
+      case 'actions':
+        return (
+          <div className="max-w-6xl mx-auto">
+            <ActionCenter 
+              actions={requests.flatMap(req => 
+                (req.pendingActions || []).map(action => ({
+                  ...action,
+                  loanId: req.id,
+                  loanAmount: req.amount,
+                  loanPurpose: req.reason
+                }))
+              )}
+              onActionComplete={(loanId, actionId) => handleActionComplete(loanId, actionId)}
+              onUploadDocument={(loanId, actionId, documentType) => handleUploadDocument(loanId, actionId, documentType)}
+            />
+          </div>
+        );
+
+      case 'profile':
+        return (
+          <div className="max-w-4xl mx-auto">
+            <BorrowerProfile delay={0} />
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 relative">
+      {/* Sophisticated background patterns */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-500/3 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+
+      {/* Sidebar Navigation */}
+      <div className={`fixed left-0 top-0 h-full w-80 bg-black/40 backdrop-blur-xl border-r border-white/10 transform transition-transform duration-300 z-50 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="p-6">
+          {/* Profile Header */}
+          <div className="flex items-center gap-4 mb-8 p-4 bg-linear-to-r from-violet-500/10 to-purple-500/10 rounded-2xl border border-violet-500/20">
+            <div className="relative">
+              <div className="w-14 h-14 bg-linear-to-br from-violet-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-lg shadow-violet-500/30">
+                <User className="w-7 h-7 text-white" />
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 border-2 border-black rounded-full"></div>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold text-lg">John Doe</h3>
+              <p className="text-slate-400 text-sm">Credibility: 780</p>
+            </div>
+          </div>
+
+          {/* Navigation */}
+          <nav className="space-y-2">
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = currentPage === item.id;
+              const hasNotifications = item.id === 'actions' && requests.some(req => req.pendingActions?.some(action => !action.completed));
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setCurrentPage(item.id as typeof currentPage);
+                    setIsSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 group ${
+                    isActive 
+                      ? `bg-linear-to-r ${item.color} text-white shadow-lg` 
+                      : 'text-slate-300 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <span className="font-medium">{item.label}</span>
+                  {hasNotifications && (
+                    <div className="ml-auto w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-xs font-bold text-white">
+                      {requests.reduce((count, req) => 
+                        count + (req.pendingActions?.filter(action => !action.completed).length || 0), 0
+                      )}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
           
-          {/* Action Buttons with Notifications */}
-          <div className="flex items-center gap-3">
-            <NotificationSystem />
-            <div className="flex flex-wrap gap-3">
-              <button
-                onClick={() => setShowProfile(true)}
-                className="px-4 py-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 text-sm font-inter"
-              >
-                Profile
-              </button>
-              <button
-                onClick={() => setShowCredibilityDashboard(true)}
-                className="px-4 py-2.5 rounded-lg bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 border border-violet-500/30 transition-all duration-300 text-sm font-inter"
-              >
-                Credibility
-              </button>
-              <button
-                onClick={() => setShowPaymentTracker(true)}
-                className="px-4 py-2.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition-all duration-300 text-sm font-inter"
-              >
-                Payments
-              </button>
-              <button
-                onClick={() => setShowActionCenter(true)}
-                className="px-4 py-2.5 rounded-lg bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 border border-orange-500/30 transition-all duration-300 text-sm font-inter"
-              >
-                Actions
-                {requests.some(req => req.pendingActions?.some(action => !action.completed)) && (
-                  <span className="ml-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {requests.reduce((count, req) => 
-                      count + (req.pendingActions?.filter(action => !action.completed).length || 0), 0
-                    )}
-                  </span>
-                )}
-              </button>
+          {/* Support Section */}
+          <div className="mt-8 p-4 bg-linear-to-br from-slate-800/50 to-slate-900/50 rounded-xl border border-white/5">
+            <h4 className="text-white font-medium mb-3">Need Help?</h4>
+            <div className="space-y-2">
               <button
                 onClick={() => setShowVoiceChat(true)}
-                className="px-4 py-2.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition-all duration-300 text-sm font-inter"
+                className="w-full flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-colors text-sm"
               >
-                Voice Chat
+                <MessageSquare className="w-4 h-4" />
+                Chat Support
               </button>
-              <button
-                onClick={() => setShowForm(true)}
-                className="px-5 py-2.5 rounded-lg bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30 flex items-center justify-center gap-2 text-sm whitespace-nowrap font-inter"
-              >
-                New Application <ArrowRight className="w-4 h-4" />
-              </button>
+              <NotificationSystem />
             </div>
           </div>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <StatsCard icon={Shield} label="Credibility Score" value="78/100" delay={100} />
-          <StatsCard icon={CheckCircle} label="Active Loans" value="1" delay={200} />
-          <StatsCard icon={Clock} label="Pending Reviews" value="1" delay={300} />
-        </div>
-        
-        <h3 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 font-clash" style={{animation: 'slideUp 0.6s ease-out', animationDelay: '400ms', animationFillMode: 'both'}}>
-          Your Applications
-        </h3>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {requests.map((request, idx) => (
-            <LoanRequestCard 
-              key={request.id} 
-              {...request} 
-              delay={500 + idx * 100}
-              onActionComplete={(actionId) => handleActionComplete(request.id, actionId)}
-              onUploadDocument={(actionId, documentType) => handleUploadDocument(request.id, actionId, documentType)}
-              onViewDetails={() => handleViewDetails(request.id)}
-            />
-          ))}
-        </div>
-        
-        {requests.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-slate-400 text-lg mb-4 font-inter">No loan applications yet.</p>
+      </div>
+
+      {/* Main Content */}
+      <div className="lg:ml-80">
+        {/* Top Header */}
+        <header className="bg-black/20 backdrop-blur-sm border-b border-white/10 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
             <button
-              onClick={() => setShowForm(true)}
-              className="px-6 py-3 rounded-lg bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-400 hover:to-purple-400 text-white font-medium transition-all duration-300 shadow-lg shadow-violet-500/30 font-inter"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
             >
-              Apply for Your First Loan
+              <Menu className="w-6 h-6" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold text-white">
+                {navigationItems.find(item => item.id === currentPage)?.label || 'Dashboard'}
+              </h1>
+              <p className="text-slate-400 text-sm">Manage your lending journey</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setShowVoiceChat(true)}
+              className="p-2 text-slate-400 hover:text-white transition-colors"
+            >
+              <MessageSquare className="w-5 h-5" />
+            </button>
+            <button className="p-2 text-slate-400 hover:text-white transition-colors">
+              <Settings className="w-5 h-5" />
             </button>
           </div>
-        )}
+        </header>
+
+        {/* Page Content */}
+        <main className="p-6 relative z-10">
+          {renderPageContent()}
+        </main>
       </div>
-      
-      {showForm && (
-        <BorrowerForm 
-          onSubmit={handleSubmit} 
-          onCancel={() => setShowForm(false)} 
+
+      {/* Mobile Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+          onClick={() => setIsSidebarOpen(false)}
         />
       )}
-      
-      {showProfile && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowProfile(false);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setShowProfile(false);
-            }
-          }}
-          tabIndex={-1}
-        >
-          <div className="flex items-start justify-center min-h-full p-4">
-            <div 
-              className="max-w-4xl w-full my-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-            <BorrowerProfile delay={0} />
-            <div className="flex justify-center mt-6">
-              <button
-                onClick={() => setShowProfile(false)}
-                className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
-              >
-                Close Profile
-              </button>
-            </div>
-          </div>
-        </div>
-        </div>
-      )}
-
-      {showCredibilityDashboard && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowCredibilityDashboard(false);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setShowCredibilityDashboard(false);
-            }
-          }}
-          tabIndex={-1}
-        >
-          <div className="flex items-start justify-center min-h-full p-4">
-            <div 
-              className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 w-full max-w-6xl my-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center p-6 border-b border-white/10">
-                <h2 className="text-2xl font-bold text-white font-clash">Credibility System</h2>
-                <button
-                  onClick={() => setShowCredibilityDashboard(false)}
-                  className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
-                >
-                  Close
-                </button>
-              </div>
-              <div className="p-6">
-                <CredibilityDashboard 
-                  currentScore={780}
-                  paymentStreak={5}
-                  totalLoans={2}
-                  communityRating={4.7}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showPaymentTracker && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowPaymentTracker(false);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setShowPaymentTracker(false);
-            }
-          }}
-          tabIndex={-1}
-        >
-          <div className="flex items-start justify-center min-h-full p-4">
-            <div 
-              className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 w-full max-w-4xl my-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center p-6 border-b border-white/10">
-                <h2 className="text-2xl font-bold text-white font-clash">Payment Management</h2>
-                <button
-                  onClick={() => setShowPaymentTracker(false)}
-                  className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
-                >
-                  Close
-                </button>
-              </div>
-              <div className="p-6">
-              <PaymentTracker 
-                loanId="loan_12345"
-                totalAmount={5000}
-                monthlyPayment={456}
-                dueDate={new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)}
-                paymentHistory={[
-                  {
-                    date: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-                    amount: 456,
-                    status: 'paid' as const,
-                    daysPaid: -2
-                  },
-                  {
-                    date: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000),
-                    amount: 456,
-                    status: 'paid' as const,
-                    daysPaid: 0
-                  },
-                  {
-                    date: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000),
-                    amount: 456,
-                    status: 'paid' as const,
-                    daysPaid: -1
-                  }
-                ]}
-                onPayNow={() => {
-                  // Handle payment logic here
-                  console.log('Payment initiated');
-                }}
-              />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showActionCenter && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) {
-              setShowActionCenter(false);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setShowActionCenter(false);
-            }
-          }}
-          tabIndex={-1}
-        >
-          <div className="flex items-start justify-center min-h-full p-4">
-            <div 
-              className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-white/10 w-full max-w-6xl my-8"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex justify-between items-center p-6 border-b border-white/10">
-                <h2 className="text-2xl font-bold text-white font-clash">Action Center</h2>
-                <button
-                  onClick={() => setShowActionCenter(false)}
-                  className="px-6 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-white border border-white/10 transition-all duration-300 font-inter"
-                >
-                  Close
-                </button>
-              </div>
-              <div className="p-6">
-                <ActionCenter 
-                  actions={requests.flatMap(req => 
-                    (req.pendingActions || []).map(action => ({
-                      ...action,
-                      loanId: req.id,
-                      loanAmount: req.amount,
-                      loanPurpose: req.reason
-                    }))
-                  )}
-                  onActionComplete={(loanId, actionId) => handleActionComplete(loanId, actionId)}
-                  onUploadDocument={(loanId, actionId, documentType) => handleUploadDocument(loanId, actionId, documentType)}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       <VoiceChat 
         isOpen={showVoiceChat}
         onClose={() => setShowVoiceChat(false)}

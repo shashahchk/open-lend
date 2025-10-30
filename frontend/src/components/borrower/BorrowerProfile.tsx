@@ -1,4 +1,4 @@
-import { User, MapPin, Briefcase, DollarSign, TrendingUp, Calendar, Award, CheckCircle, Star, Trophy, Target, Zap, MessageCircle, Phone } from 'lucide-react';
+import { User, MapPin, Briefcase, Calendar, CheckCircle, Shield, TrendingUp, CreditCard, DollarSign, Edit, Clock } from 'lucide-react';
 
 interface BorrowerProfileProps {
   delay: number;
@@ -11,6 +11,9 @@ const BorrowerProfile = ({ delay }: BorrowerProfileProps) => {
     memberSince: 'January 2023',
     employment: 'Software Engineer',
     income: '$4,500/month',
+    credibilityScore: 780,
+    totalLoans: 3,
+    totalRepaid: '$12,300',
     creditHistory: [
       { date: '2024', amount: '$3,000', status: 'Repaid on time', impact: '+12 points' },
       { date: '2023', amount: '$1,500', status: 'Repaid early', impact: '+8 points' },
@@ -32,162 +35,144 @@ const BorrowerProfile = ({ delay }: BorrowerProfileProps) => {
   };
   
   return (
-    <div 
-      className="bg-linear-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/10"
-      style={{animation: 'slideUp 0.6s ease-out', animationDelay: `${delay}ms`, animationFillMode: 'both'}}
-    >
-      <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-linear-to-br from-violet-500 to-purple-500 rounded-full flex items-center justify-center">
-          <User className="w-8 h-8 text-white" />
-        </div>
-        <div>
-          <h3 className="text-xl font-bold text-white font-clash">{profileData.name}</h3>
-          <div className="flex items-center gap-2 text-slate-400 text-sm font-inter">
-            <MapPin className="w-4 h-4" />
-            {profileData.location}
+    <div className="space-y-6" style={{animation: 'slideUp 0.6s ease-out', animationDelay: `${delay}ms`, animationFillMode: 'both'}}>
+      {/* Profile Header - Simple & Clean */}
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <div className="w-20 h-20 bg-linear-to-br from-violet-500 to-purple-500 rounded-2xl flex items-center justify-center">
+              <User className="w-10 h-10 text-white" />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-emerald-500 border-2 border-slate-800 rounded-full flex items-center justify-center">
+              <CheckCircle className="w-3 h-3 text-white" />
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-slate-400 text-sm font-inter">
-            <Calendar className="w-4 h-4" />
-            Member since {profileData.memberSince}
+          
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-2xl font-bold text-white">{profileData.name}</h1>
+              <button className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors">
+                <Edit className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-4 text-slate-400 text-sm">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" />
+                <span>{profileData.location}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4" />
+                <span>Since {profileData.memberSince}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Briefcase className="w-4 h-4" />
+                <span>{profileData.employment}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+          <div className="text-center p-3 bg-white/5 rounded-xl">
+            <div className="text-2xl font-bold text-white">{profileData.credibilityScore}</div>
+            <div className="text-xs text-slate-400">Credibility</div>
+          </div>
+          <div className="text-center p-3 bg-white/5 rounded-xl">
+            <div className="text-2xl font-bold text-white">{profileData.totalLoans}</div>
+            <div className="text-xs text-slate-400">Total Loans</div>
+          </div>
+          <div className="text-center p-3 bg-white/5 rounded-xl">
+            <div className="text-2xl font-bold text-white">{profileData.totalRepaid}</div>
+            <div className="text-xs text-slate-400">Repaid</div>
+          </div>
+          <div className="text-center p-3 bg-white/5 rounded-xl">
+            <div className="text-2xl font-bold text-white">100%</div>
+            <div className="text-xs text-slate-400">Success Rate</div>
           </div>
         </div>
       </div>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <div className="p-4 bg-slate-700/30 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <Briefcase className="w-4 h-4 text-violet-400" />
-            <span className="text-sm text-slate-400 font-inter">Employment</span>
+
+      {/* Simple Two-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        {/* Verifications - Simplified */}
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+          <div className="flex items-center gap-3 mb-4">
+            <Shield className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-lg font-semibold text-white">Verification Status</h3>
           </div>
-          <p className="text-white font-semibold font-inter">{profileData.employment}</p>
-        </div>
-        <div className="p-4 bg-slate-700/30 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <DollarSign className="w-4 h-4 text-emerald-400" />
-            <span className="text-sm text-slate-400 font-inter">Monthly Income</span>
+          <div className="space-y-3">
+            {profileData.verifications.map((verification, index) => (
+              <div key={index} className="flex items-center justify-between py-2">
+                <span className="text-slate-300 text-sm">{verification.type}</span>
+                {verification.verified ? (
+                  <div className="flex items-center gap-2 text-emerald-400">
+                    <CheckCircle className="w-4 h-4" />
+                    <span className="text-xs">Verified</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-slate-500">
+                    <Clock className="w-4 h-4" />
+                    <span className="text-xs">Pending</span>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
-          <p className="text-white font-semibold font-inter">{profileData.income}</p>
         </div>
-      </div>
-      
-      <div className="mb-6">
-        <h4 className="text-lg font-bold text-white mb-3 font-clash flex items-center gap-2">
-          <Award className="w-5 h-5 text-violet-400" />
-          Credit History
-        </h4>
-        <div className="space-y-3">
-          {profileData.creditHistory.map((record, idx) => (
-            <div key={idx} className="p-3 bg-slate-700/20 rounded-lg border border-white/5">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="text-white font-semibold font-inter">{record.amount} loan ({record.date})</p>
-                  <p className="text-sm text-emerald-400 font-inter">{record.status}</p>
+
+        {/* Financial Health - Simplified */}
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+          <div className="flex items-center gap-3 mb-4">
+            <TrendingUp className="w-5 h-5 text-blue-400" />
+            <h3 className="text-lg font-semibold text-white">Financial Health</h3>
+          </div>
+          <div className="space-y-3">
+            {Object.entries(profileData.riskFactors).map(([key, value], index) => {
+              const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+              const isGood = (key === 'paymentHistory' && value === '100%') || 
+                           (key === 'debtToIncomeRatio' && parseFloat(value) < 30);
+              
+              return (
+                <div key={index} className="flex items-center justify-between py-2">
+                  <span className="text-slate-300 text-sm">{label}</span>
+                  <span className={`px-2 py-1 rounded text-xs font-medium ${
+                    isGood ? 'bg-emerald-500/20 text-emerald-400' : 'bg-yellow-500/20 text-yellow-400'
+                  }`}>
+                    {value}
+                  </span>
                 </div>
-                <span className="text-xs text-violet-400 bg-violet-500/20 px-2 py-1 rounded-full font-inter">
-                  {record.impact}
-                </span>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Loan History - Clean List */}
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-white/10">
+        <div className="flex items-center gap-3 mb-4">
+          <CreditCard className="w-5 h-5 text-violet-400" />
+          <h3 className="text-lg font-semibold text-white">Loan History</h3>
+        </div>
+        <div className="space-y-3">
+          {profileData.creditHistory.map((loan, index) => (
+            <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-violet-500/20 rounded-lg flex items-center justify-center">
+                  <DollarSign className="w-4 h-4 text-violet-400" />
+                </div>
+                <div>
+                  <div className="text-white font-medium text-sm">{loan.amount}</div>
+                  <div className="text-slate-400 text-xs">{loan.date}</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-emerald-400 text-sm font-medium">{loan.status}</div>
+                <div className="text-emerald-400 text-xs">{loan.impact}</div>
               </div>
             </div>
           ))}
-        </div>
-      </div>
-      
-      <div className="mb-6">
-        <h4 className="text-lg font-bold text-white mb-3 font-clash">Verifications</h4>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {profileData.verifications.map((verification, idx) => (
-            <div key={idx} className="flex items-center gap-2">
-              <CheckCircle className={`w-4 h-4 ${verification.verified ? 'text-emerald-400' : 'text-slate-500'}`} />
-              <span className={`text-sm font-inter ${verification.verified ? 'text-white' : 'text-slate-400'}`}>
-                {verification.type}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      <div className="mb-6">
-        <h4 className="text-lg font-bold text-white mb-3 font-clash flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-violet-400" />
-          Risk Assessment
-        </h4>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center">
-            <p className="text-xs text-slate-400 font-inter">Debt-to-Income</p>
-            <p className="text-lg font-bold text-emerald-400 font-clash">{profileData.riskFactors.debtToIncomeRatio}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-slate-400 font-inter">Payment History</p>
-            <p className="text-lg font-bold text-emerald-400 font-clash">{profileData.riskFactors.paymentHistory}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-slate-400 font-inter">Credit Utilization</p>
-            <p className="text-lg font-bold text-yellow-400 font-clash">{profileData.riskFactors.creditUtilization}</p>
-          </div>
-          <div className="text-center">
-            <p className="text-xs text-slate-400 font-inter">Account Age</p>
-            <p className="text-lg font-bold text-white font-clash">{profileData.riskFactors.accountAge}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Credibility Level & Achievements */}
-      <div className="mb-6">
-        <h4 className="text-lg font-bold text-white mb-3 font-clash flex items-center gap-2">
-          <Star className="w-5 h-5 text-violet-400" />
-          Credibility Level
-        </h4>
-        <div className="bg-slate-700/30 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Trophy className="w-6 h-6 text-yellow-400" />
-              <span className="text-xl font-bold text-white font-clash">Level 7</span>
-              <span className="text-sm text-violet-400 bg-violet-500/20 px-2 py-1 rounded-full font-inter">Trusted Borrower</span>
-            </div>
-            <span className="text-2xl font-bold text-violet-400 font-clash">780 pts</span>
-          </div>
-          
-          {/* Progress to next level */}
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-slate-400 font-inter">Progress to Level 8</span>
-              <span className="text-sm text-violet-400 font-inter">80/100</span>
-            </div>
-            <div className="w-full bg-slate-600 rounded-full h-2">
-              <div className="bg-linear-to-r from-violet-500 to-purple-500 h-2 rounded-full transition-all duration-1000" style={{ width: '80%' }} />
-            </div>
-          </div>
-
-          {/* Recent achievements */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex items-center gap-2 p-2 bg-emerald-500/20 rounded-lg">
-              <Zap className="w-4 h-4 text-emerald-400" />
-              <span className="text-sm text-emerald-300 font-inter">5-Payment Streak</span>
-            </div>
-            <div className="flex items-center gap-2 p-2 bg-blue-500/20 rounded-lg">
-              <Target className="w-4 h-4 text-blue-400" />
-              <span className="text-sm text-blue-300 font-inter">Early Payment Pro</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div>
-        <h4 className="text-lg font-bold text-white mb-3 font-clash">Quick Actions</h4>
-        <div className="flex flex-wrap gap-3">
-          <button className="flex items-center gap-2 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 rounded-lg transition-colors font-inter text-sm">
-            <MessageCircle className="w-4 h-4" />
-            Live Chat
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 rounded-lg transition-colors font-inter text-sm">
-            <Phone className="w-4 h-4" />
-            Voice Call
-          </button>
-          <button className="flex items-center gap-2 px-4 py-2 bg-violet-600/20 hover:bg-violet-600/30 text-violet-300 rounded-lg transition-colors font-inter text-sm">
-            <Star className="w-4 h-4" />
-            View Rewards
-          </button>
         </div>
       </div>
     </div>
