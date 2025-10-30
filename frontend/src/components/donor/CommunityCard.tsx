@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { ArrowRight, Users, MapPin, CreditCard, X } from 'lucide-react';
+import { ArrowRight, MapPin, CreditCard, X } from 'lucide-react';
 
 export interface Community {
   id: number;
   name: string;
   location: string;
   category: string;
-  raised: number;
-  target: number;
-  borrowers: number;
+  poolBalance: number; // Available funds in the pool
+  totalPoolSize: number; // Total pool capacity
+  activeLoans: number; // Currently active loans
+  loanApplications: number; // Pending applications
+  borrowers: number; // Total people helped
   rate: number;
   description: string;
+  averageLoanAmount?: number; // Average loan size
+  successRate?: number; // Loan success/approval rate
   imageUrl?: string;
 }
 
@@ -20,13 +24,12 @@ interface CommunityCardProps extends Community {
 }
 
 const CommunityCard = ({ 
-  id, name, location, category, raised, target, borrowers, rate, description, onSupport 
+  id, name, location, category, poolBalance, totalPoolSize, activeLoans, loanApplications, borrowers, rate, description, averageLoanAmount, successRate, onSupport 
 }: CommunityCardProps) => {
-  const progress = (raised / target) * 100;
   const [showDetails, setShowDetails] = useState(false);
   
   const communityData = { 
-    id, name, location, category, raised, target, borrowers, rate, description 
+    id, name, location, category, poolBalance, totalPoolSize, activeLoans, loanApplications, borrowers, rate, description, averageLoanAmount, successRate
   };
   
   return (
@@ -35,61 +38,66 @@ const CommunityCard = ({
         className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-blue-400/50 transition-all cursor-pointer"
         onClick={() => setShowDetails(true)}
       >
-        <div className="mb-4">
-          <div className="flex items-start justify-between mb-2">
+        <div className="mb-6">
+          <div className="flex items-start justify-between mb-3">
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-white mb-1">
+              <h3 className="text-xl font-bold text-white mb-2">
                 {name}
               </h3>
-              <div className="flex items-center gap-2 text-gray-400 text-sm mb-1">
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
                 <MapPin className="w-4 h-4" />
                 <span>{location}</span>
                 <span>•</span>
-                <span className="capitalize">{category}</span>
+                <span className="capitalize bg-gray-700/50 px-2 py-1 rounded text-xs">{category}</span>
               </div>
             </div>
             
-            <div className="text-center">
-              <div className="text-blue-400 font-bold text-lg">
+            <div className="bg-blue-500/20 rounded-lg p-3 border border-blue-400/30">
+              <div className="text-blue-400 font-bold text-xl">
                 {borrowers}
               </div>
-              <div className="text-gray-400 text-xs">
-                Helped
+              <div className="text-blue-300 text-xs font-medium">
+                People helped
               </div>
             </div>
           </div>
         </div>
       
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
+        {/* Main Pool Info */}
+        <div className="mb-4 p-4 bg-white/5 rounded-lg border border-white/10">
+          <div className="flex justify-between items-start mb-3">
             <div>
-              <div className="text-xl font-bold text-white">
-                ${raised.toLocaleString()}
+              <div className="text-2xl font-bold text-white">
+                ${poolBalance.toLocaleString()}
               </div>
-              <div className="text-gray-400 text-sm">
-                of ${target.toLocaleString()}
+              <div className="text-blue-300 text-sm">
+                Available for new loans
               </div>
             </div>
             <div className="text-right">
-              <div className="text-lg font-bold text-green-400">
-                {Math.round(progress)}%
+              <div className="text-lg font-bold text-blue-400">
+                {activeLoans}
+              </div>
+              <div className="text-gray-400 text-xs">
+                Currently funded
               </div>
             </div>
           </div>
           
-          <div className="w-full bg-gray-700 rounded-full h-2">
-            <div 
-              className="bg-linear-to-r from-blue-500 to-green-400 h-2 rounded-full transition-all duration-300"
-              style={{width: `${progress}%`}}
-            ></div>
+          <div className="text-sm text-gray-300">
+            {loanApplications > 0 && (
+              <span className="text-orange-400">{loanApplications} applications pending approval</span>
+            )}
+            {averageLoanAmount && (
+              <>
+                {loanApplications > 0 && <span className="text-gray-500"> • </span>}
+                <span>Typical loan: ${averageLoanAmount.toLocaleString()}</span>
+              </>
+            )}
           </div>
         </div>
       
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-gray-400 text-sm">
-            <Users className="w-4 h-4" />
-            <span>{borrowers} people helped</span>
-          </div>
+        <div className="flex justify-end">
           <button 
             className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-medium transition-all"
             onClick={(e) => {
@@ -133,20 +141,34 @@ const CommunityCard = ({
               </div>
               
               <div className="p-3 bg-gray-700/50 rounded">
-                <div className="flex justify-between mb-2">
-                  <span className="text-gray-400 text-sm">Progress</span>
-                  <span className="text-white font-bold">{Math.round(progress)}%</span>
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <div className="text-gray-400 text-xs">Pool Balance</div>
+                    <div className="text-white font-bold">${poolBalance.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 text-xs">Total Pool Size</div>
+                    <div className="text-white font-bold">${totalPoolSize.toLocaleString()}</div>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-600 rounded-full h-2 mb-2">
-                  <div 
-                    className="h-full bg-blue-500 rounded-full"
-                    style={{width: `${progress}%`}}
-                  ></div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <div className="text-gray-400 text-xs">Active Loans</div>
+                    <div className="text-blue-400 font-bold">{activeLoans}</div>
+                  </div>
+                  <div>
+                    <div className="text-gray-400 text-xs">Applications</div>
+                    <div className="text-orange-400 font-bold">{loanApplications}</div>
+                  </div>
                 </div>
-                <div className="flex justify-between text-xs text-gray-400">
-                  <span>${raised.toLocaleString()} raised</span>
-                  <span>${target.toLocaleString()} goal</span>
-                </div>
+                {successRate && (
+                  <div className="mt-3 pt-2 border-t border-gray-600">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-400">Success Rate</span>
+                      <span className="text-green-400 font-bold">{Math.round(successRate)}%</span>
+                    </div>
+                  </div>
+                )}
               </div>
               
               <button 

@@ -64,10 +64,14 @@ const DonorView = () => {
       name: 'Small Business Growth', 
       location: 'Southeast Asia', 
       category: 'business',
-      raised: 45000, 
-      target: 100000, 
-      borrowers: 24, 
-      rate: 4.5, // keeping for compatibility, but not displaying
+      poolBalance: 55000, // Available funds
+      totalPoolSize: 100000, // Total pool capacity
+      activeLoans: 18, // Currently funded loans
+      loanApplications: 12, // Pending applications
+      borrowers: 24, // Total people helped historically
+      rate: 4.5,
+      averageLoanAmount: 2500,
+      successRate: 85,
       description: 'Supporting small businesses and entrepreneurs in developing markets to create sustainable economic growth and job opportunities.'
     },
     { 
@@ -75,10 +79,14 @@ const DonorView = () => {
       name: 'Education Support', 
       location: 'East Africa', 
       category: 'education',
-      raised: 28000, 
-      target: 50000, 
-      borrowers: 18, 
+      poolBalance: 22000,
+      totalPoolSize: 50000,
+      activeLoans: 14,
+      loanApplications: 8,
+      borrowers: 18,
       rate: 3.8,
+      averageLoanAmount: 1800,
+      successRate: 92,
       description: 'Funding educational initiatives, school supplies, and student loans to improve access to quality education.'
     },
     { 
@@ -86,10 +94,14 @@ const DonorView = () => {
       name: 'Healthcare Access', 
       location: 'Latin America', 
       category: 'healthcare',
-      raised: 62000, 
-      target: 80000, 
-      borrowers: 31, 
+      poolBalance: 18000,
+      totalPoolSize: 80000,
+      activeLoans: 25,
+      loanApplications: 15,
+      borrowers: 31,
       rate: 4.2,
+      averageLoanAmount: 2200,
+      successRate: 88,
       description: 'Improving healthcare infrastructure and providing medical equipment to underserved communities.'
     },
     { 
@@ -97,10 +109,14 @@ const DonorView = () => {
       name: 'Women Entrepreneurs', 
       location: 'South Asia', 
       category: 'women',
-      raised: 38000, 
-      target: 75000, 
-      borrowers: 22, 
+      poolBalance: 37000,
+      totalPoolSize: 75000,
+      activeLoans: 16,
+      loanApplications: 9,
+      borrowers: 22,
       rate: 4.0,
+      averageLoanAmount: 2000,
+      successRate: 90,
       description: 'Empowering women entrepreneurs with microloans and business development resources.'
     },
     { 
@@ -108,10 +124,14 @@ const DonorView = () => {
       name: 'Agricultural Innovation', 
       location: 'West Africa', 
       category: 'agriculture',
-      raised: 15000, 
-      target: 40000, 
-      borrowers: 12, 
+      poolBalance: 25000,
+      totalPoolSize: 40000,
+      activeLoans: 8,
+      loanApplications: 6,
+      borrowers: 12,
       rate: 3.5,
+      averageLoanAmount: 1500,
+      successRate: 87,
       description: 'Supporting farmers with modern equipment and sustainable farming techniques to increase crop yields.'
     },
     { 
@@ -119,10 +139,14 @@ const DonorView = () => {
       name: 'Tech Training Centers', 
       location: 'Eastern Europe', 
       category: 'education',
-      raised: 72000, 
-      target: 90000, 
-      borrowers: 35, 
+      poolBalance: 18000,
+      totalPoolSize: 90000,
+      activeLoans: 28,
+      loanApplications: 18,
+      borrowers: 35,
       rate: 4.8,
+      averageLoanAmount: 2800,
+      successRate: 83,
       description: 'Creating technology training centers to bridge the digital divide and provide tech skills education.'
     }
   ];
@@ -260,7 +284,7 @@ const DonorView = () => {
                 
                 <div className="flex justify-between items-center pt-4 border-t border-white/10 text-sm text-gray-400">
                   <span>
-                    {filteredCommunities.length} causes • ${filteredCommunities.reduce((sum, c) => sum + c.raised, 0).toLocaleString()} raised
+                    {filteredCommunities.length} pools • ${filteredCommunities.reduce((sum, c) => sum + c.poolBalance, 0).toLocaleString()} available
                   </span>
                   <div className="flex items-center gap-1">
                     <div className="w-2 h-2 bg-green-400 rounded-full"></div>
